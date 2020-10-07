@@ -2,7 +2,17 @@
   <div #chartHeader class="po-chart-header">
     <div class="po-chart-title">{{ title }}</div>
   </div>
-  <ng-template #chartContainer></ng-template>
+
+  <po-chart-container
+    *ngIf="isChartLineType"
+    [p-type]="type"
+    [p-series]="series"
+    [p-min-max-values]="minMaxValues"
+    [p-categories]="categories"
+    [p-container-size]="getContainerSize()"
+  ></po-chart-container>
+
+  <ng-template #chartContainer *ngIf="!isChartLineType"></ng-template>
 
   <div *ngIf="!isChartGaugeType">
     <ng-container *ngTemplateOutlet="chartLegendGroup"></ng-container>

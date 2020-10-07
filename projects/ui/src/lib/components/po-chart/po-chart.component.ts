@@ -16,6 +16,8 @@ import {
 
 import { Subject } from 'rxjs';
 
+import { calculateContainerSize } from './helpers/dom';
+
 import { PoChartBaseComponent } from './po-chart-base.component';
 import { PoChartColors } from './po-chart-colors.constant';
 import { PoChartDonutComponent } from './po-chart-types/po-chart-donut/po-chart-donut.component';
@@ -86,6 +88,10 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     return this.type === PoChartType.Gauge;
   }
 
+  get isChartLineType(): boolean {
+    return this.type === PoChartType.Line;
+  }
+
   @HostListener('window:resize')
   onResize = () => this.windowResizeListener.next();
 
@@ -101,7 +107,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     if (charWrapperWidth && !this.calculatedElement && this.initialized) {
       this.calculatedElement = true;
       this.getSeriesColor();
-      this.dynamicComponentSetting();
+      // this.dynamicComponentSetting();
     }
 
     this.checkingForSerieChanges();
@@ -119,7 +125,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     if (this.componentRef) {
       this.componentRef.destroy();
       this.getSeriesColor();
-      this.dynamicComponentSetting();
+      // this.dynamicComponentSetting();
     }
   }
 
@@ -221,9 +227,17 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
   private setResizeListenerSubscribe(instance: PoChartDynamicTypeComponent) {
     this.windowResizeListener.subscribe(() => {
+      instance.chartWrapper = this.chartWrapper.nativeElement.offsetWidth;
       instance.chartHeader = this.chartHeader.nativeElement.offsetHeight;
       instance.chartLegend = this.chartLegendHeight(this.chartLegend);
-      instance.chartWrapper = this.chartWrapper.nativeElement.offsetWidth;
     });
+  }
+
+  getContainerSize() {
+    const chartWrapperWidth = this.chartWrapper.nativeElement.offsetWidth;
+    const chartHeaderHeight = this.chartHeader?.nativeElement.offsetHeight;
+    const chartLegendHeight = this.chartLegend?.nativeElement.offsetHeight;
+
+    return calculateContainerSize(this.height, chartWrapperWidth, chartHeaderHeight, chartLegendHeight);
   }
 }

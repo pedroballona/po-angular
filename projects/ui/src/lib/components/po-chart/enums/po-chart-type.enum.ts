@@ -20,5 +20,10 @@ export enum PoChartType {
   /**
    * Exibe os dados em formato circular, dividindo proporcionalmente em fatias.
    */
-  Pie = 'pie'
+  Pie = 'pie',
+
+  /**
+   * Line
+   */
+  Line = 'line'
 }

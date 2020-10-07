@@ -1,17 +1,19 @@
 import { EventEmitter, Input, Output, Directive } from '@angular/core';
 
 import { convertToInt, isTypeof } from '../../utils/util';
+import { calculateMaxValue } from './helpers/maths';
 
 import { PoChartGaugeSerie } from './po-chart-types/po-chart-gauge/po-chart-gauge-series.interface';
 import { PoChartType } from './enums/po-chart-type.enum';
 import { PoDonutChartSeries } from './po-chart-types/po-chart-donut/po-chart-donut-series.interface';
 import { PoPieChartSeries } from './po-chart-types/po-chart-pie/po-chart-pie-series.interface';
+import { PoLineChartSeries } from './po-chart-container/interfaces/po-chart-line-series.interface';
 
 const poChartDefaultHeight = 400;
 const poChartMinHeight = 200;
 const poChartTypeDefault = PoChartType.Pie;
 
-export type PoChartSeries = Array<PoDonutChartSeries | PoPieChartSeries | PoChartGaugeSerie>;
+export type PoChartSeries = Array<PoDonutChartSeries | PoPieChartSeries | PoChartGaugeSerie | PoLineChartSeries>;
 
 /**
  * @description
@@ -32,8 +34,10 @@ export type PoChartSeries = Array<PoDonutChartSeries | PoPieChartSeries | PoChar
 @Directive()
 export abstract class PoChartBaseComponent {
   private _height: number;
-  private _series: Array<PoDonutChartSeries | PoPieChartSeries> | PoChartGaugeSerie;
+  private _series: Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries> | PoChartGaugeSerie;
   private _type: PoChartType = poChartTypeDefault;
+
+  minMaxValues: any;
 
   // manipulação das séries tratadas internamente para preservar 'p-series';
   protected chartSeries: PoChartSeries;
@@ -84,17 +88,25 @@ export abstract class PoChartBaseComponent {
    * - `PoPieChartSeries`
    * - `PoChartGaugeSerie`
    */
-  @Input('p-series') set series(value: PoChartGaugeSerie | Array<PoDonutChartSeries | PoPieChartSeries>) {
+  @Input('p-series') set series(
+    value: PoChartGaugeSerie | Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries>
+  ) {
     this._series = value || [];
 
-    this.chartSeries = Array.isArray(this._series)
-      ? [...this._series]
-      : this.transformObjectToArrayObject(this._series);
+    if (Array.isArray(this._series)) {
+      this.minMaxValues = calculateMaxValue(this._series);
+      this.chartSeries = [...this._series];
+    } else {
+      this.chartSeries = this.transformObjectToArrayObject(this._series);
+    }
   }
 
   get series() {
     return this._series;
   }
+
+  /** Define as categorias das séries. */
+  @Input('p-categories') categories?: Array<any>;
 
   /** Define o título do gráfico. */
   @Input('p-title') title?: string;
