@@ -11,7 +11,10 @@ import { PoChartLegendComponent } from './po-chart-legend/po-chart-legend.compon
 import { PoChartPieComponent } from './po-chart-types/po-chart-pie/po-chart-pie.component';
 import { PoChartContainerComponent } from './po-chart-container/po-chart-container.component';
 import { ChartLineComponent } from './po-chart-container/chart-line/chart-line.component';
-import { ChartAxisComponent } from './po-chart-container/chart-axis/chart-axis.component';
+import { PoChartAxisComponent } from './po-chart-container/po-chart-axis/po-chart-axis.component';
+import { PoChartAxisXComponent } from './po-chart-container/po-chart-axis/po-chart-axis-x/po-chart-axis-x.component';
+import { PoChartAxisYComponent } from './po-chart-container/po-chart-axis/po-chart-axis-y/po-chart-axis-y.component';
+import { PoChartAxisXLabelComponent } from './po-chart-container/po-chart-axis/po-chart-axis-x-label/po-chart-axis-x-label.component';
 
 /**
  * @description
@@ -29,7 +32,10 @@ import { ChartAxisComponent } from './po-chart-container/chart-axis/chart-axis.c
     PoChartLegendComponent,
     PoChartContainerComponent,
     ChartLineComponent,
-    ChartAxisComponent
+    PoChartAxisComponent,
+    PoChartAxisXComponent,
+    PoChartAxisYComponent,
+    PoChartAxisXLabelComponent
   ],
   exports: [PoChartComponent]
 })

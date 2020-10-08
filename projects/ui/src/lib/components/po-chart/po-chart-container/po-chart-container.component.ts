@@ -5,7 +5,7 @@ import { PoLineChartSeries } from './interfaces/po-chart-line-series.interface';
 
 @Component({
   selector: 'po-chart-container',
-  templateUrl: './po-chart-container.component.svg'
+  templateUrl: './po-chart-container.component.html'
 })
 export class PoChartContainerComponent implements OnInit {
   private _series: Array<PoLineChartSeries>;
@@ -29,9 +29,7 @@ export class PoChartContainerComponent implements OnInit {
 
   constructor(private elementRef: ElementRef) {}
 
-  ngOnInit(): void {
-    console.log('containerSize', this.containerSize);
-  }
+  ngOnInit(): void {}
 
   setViewBox() {
     const { containerWidth, containerHeight } = this.containerSize;

@@ -1,9 +1,3 @@
-<!-- AXIS X -->
-<svg:polyline *ngFor="let item of counter(axisXGridLines); let i = index;"
-  class="po-chart-axis-line" 
-  [attr.points]="setAxisXPoints(i)">
-</svg:polyline> 
-
 <!-- AXIS Y OUTER -->
 <svg:polyline *ngFor="let item of counter(2); let i = index;"
   class="po-chart-axis-line"

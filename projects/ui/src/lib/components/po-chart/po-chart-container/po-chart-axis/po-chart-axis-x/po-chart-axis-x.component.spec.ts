@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChartAxisComponent } from './chart-axis.component';
+import { PoChartAxisXComponent } from './po-chart-axis-x.component';
 
-describe('ChartAxisComponent', () => {
-  let component: ChartAxisComponent;
-  let fixture: ComponentFixture<ChartAxisComponent>;
+describe('PoChartAxisXComponent', () => {
+  let component: PoChartAxisXComponent;
+  let fixture: ComponentFixture<PoChartAxisXComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ChartAxisComponent]
+      declarations: [PoChartAxisXComponent]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ChartAxisComponent);
+    fixture = TestBed.createComponent(PoChartAxisXComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
