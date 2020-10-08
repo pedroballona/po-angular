@@ -18,3 +18,9 @@
     [p-container-size]="containerSize">
   </svg:g>
  
+   <!-- AXIS Y LABELS-->
+  <svg:g po-chart-axis-y-label
+    [p-container-size]="containerSize"
+    [p-categories]="categories"
+    >
+  </svg:g>

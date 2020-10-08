@@ -1,4 +1,4 @@
-import { PADDING } from './default-values';
+import { PADDING, AXISXLABELAREA } from './default-values';
 
 /**
  * Calcula as dimensões do container
@@ -16,7 +16,7 @@ export function calculateContainerSize(
 
   // Largura da área de plotagem
   // Largura container SVG - PADDING LEFT - (AXIS X LABEL AREA: padding x 2) - (SVG AXIS INTERNAL PLOT AREA: padding left + padding left) - PADDING RIGHT
-  const svgPlottingAreaWidth = containerWidth - PADDING * 6;
+  const svgPlottingAreaWidth = containerWidth - AXISXLABELAREA - PADDING * 4;
 
   // Altura do container
   const subtractedHeights = chartHeight - chartHeaderHeight - chartLegendHeight - PADDING * 2;
