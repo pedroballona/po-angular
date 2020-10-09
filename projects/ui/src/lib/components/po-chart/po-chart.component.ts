@@ -25,6 +25,7 @@ import { PoChartDynamicTypeComponent } from './po-chart-types/po-chart-dynamic-t
 import { PoChartGaugeComponent } from './po-chart-types/po-chart-gauge/po-chart-gauge.component';
 import { PoChartPieComponent } from './po-chart-types/po-chart-pie/po-chart-pie.component';
 import { PoChartType } from './enums/po-chart-type.enum';
+
 import { PoChartContainerSize } from './interfaces/po-chart-container-size.interface';
 
 /**
@@ -64,7 +65,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     [PoChartType.Pie]: PoChartPieComponent
   };
 
-  containerSize: any;
+  containerSize: PoChartContainerSize;
   colors: Array<string> = [];
 
   @ViewChild('chartContainer', { read: ViewContainerRef, static: true })

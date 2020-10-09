@@ -10,20 +10,20 @@
 
 export interface PoChartContainerSize {
   /** Largura do container. */
-  containerWidth: string;
+  svgWidth?: number;
 
   /** Metade da largura do container */
-  containerCenterX: string;
+  centerX?: number;
 
   /** Altura do container. */
-  containerHeight: string;
+  svgHeight?: number;
 
   /** Metade da altura do container. */
-  containerCenterY: string;
+  centerY?: number;
 
   /** Medida da largura do container - (padding lateral) - (area do labelX) - (padding lateral do grid). */
-  svgPlottingAreaWidth: string;
+  svgPlottingAreaWidth?: number;
 
   /** Medida da altura do container - padding superior. */
-  svgPlottingAreaHeight: string;
+  svgPlottingAreaHeight?: number;
 }

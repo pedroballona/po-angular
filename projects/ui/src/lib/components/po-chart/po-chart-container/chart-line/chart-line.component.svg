@@ -1,0 +1,4 @@
+<svg:polyline *ngFor="let item of seriesPoints"
+  class="po-chart-line-path" 
+  [attr.points]="item.coordinates">
+</svg:polyline> 

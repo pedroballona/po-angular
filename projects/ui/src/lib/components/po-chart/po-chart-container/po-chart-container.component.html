@@ -3,13 +3,23 @@
   class="po-chart-svg-element"
   preserveAspectRatio="xMidYMin meet"
   [attr.viewBox]="viewBox"
-  [attr.width]="containerSize.containerWidth"
-  [attr.height]="containerSize.containerHeight"
+  [attr.width]="containerSize.svgWidth"
+  [attr.height]="containerSize.svgHeight"
 >
+  <!-- axis -->
   <svg:g
     po-chart-axis
     [p-container-size]="containerSize"
     [p-categories]="categories"
     [p-min-max-values]="minMaxValues"
+  ></svg:g>
+
+  <!-- chart line -->
+  <svg:g
+    po-chart-line
+    [p-series]="series"
+    [p-categories]="categories"
+    [p-min-max-values]="minMaxValues"
+    [p-container-size]="containerSize"
   ></svg:g>
 </svg:svg>

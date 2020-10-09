@@ -3,6 +3,8 @@ import { Component, Input } from '@angular/core';
 import { AXISXLABELAREA, AXISXGRIDLINES, PADDING } from '../../helpers/default-values';
 
 import { PoLineChartSeries } from '../../interfaces/po-chart-line-series.interface';
+import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
+import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
 
 @Component({
   selector: '[po-chart-axis]',
@@ -18,8 +20,8 @@ export class PoChartAxisComponent {
   private digitsPrecision: number = 0;
   private _axisXGridLines: number = AXISXGRIDLINES;
   private _categories: Array<any> = [];
-  private _containerSize: any = {};
-  private _minMaxValues: any = {};
+  private _containerSize: PoChartContainerSize = {};
+  private _minMaxValues: PoChartMinMaxValues = {};
 
   // externar
   @Input('p-axis-x-grid-lines') set axisXGridLines(value: number) {
@@ -44,7 +46,7 @@ export class PoChartAxisComponent {
     return this._categories;
   }
 
-  @Input('p-container-size') set containerSize(value: any) {
+  @Input('p-container-size') set containerSize(value: PoChartContainerSize) {
     this._containerSize = value;
 
     this.setAxisXPoints(this.axisXGridLines, this._containerSize);
@@ -57,7 +59,7 @@ export class PoChartAxisComponent {
     return this._containerSize;
   }
 
-  @Input('p-min-max-values') set minMaxValues(value: any) {
+  @Input('p-min-max-values') set minMaxValues(value: PoChartMinMaxValues) {
     this._minMaxValues = value;
 
     this.setAxisXLabelPoints(this.axisXGridLines, this.containerSize, this._minMaxValues, this.digitsPrecision);
@@ -69,10 +71,10 @@ export class PoChartAxisComponent {
 
   constructor() {}
 
-  private setAxisXPoints(axisXGridLines: number, containerSize: any) {
+  private setAxisXPoints(axisXGridLines: number, containerSize: PoChartContainerSize) {
     this.axisXPoints = [...Array(axisXGridLines)].map((_, index: number) => {
       const startX = AXISXLABELAREA;
-      const endX = containerSize.containerWidth;
+      const endX = containerSize.svgWidth;
       const yCoordinate = this.calculateAxisXCoordinateY(axisXGridLines, containerSize, index);
 
       const coordinates = `M${startX} ${yCoordinate} L${endX}, ${yCoordinate}`;
@@ -81,7 +83,12 @@ export class PoChartAxisComponent {
     });
   }
 
-  private setAxisXLabelPoints(axisXGridLines: number, containerSize: any, minMaxValues: any, digitsPrecision: number) {
+  private setAxisXLabelPoints(
+    axisXGridLines: number,
+    containerSize: PoChartContainerSize,
+    minMaxValues: PoChartMinMaxValues,
+    digitsPrecision: number
+  ) {
     this.axisXLabelPoints = [...Array(axisXGridLines)].map((_, index: number) => {
       const label = (minMaxValues.maxValue * (index / (axisXGridLines - 1))).toFixed(digitsPrecision);
 
@@ -92,7 +99,7 @@ export class PoChartAxisComponent {
     });
   }
 
-  private setAxisYPoints(containerSize: any, categories: Array<any>) {
+  private setAxisYPoints(containerSize: PoChartContainerSize, categories: Array<any>) {
     const startY = 0;
     const endY = containerSize.svgPlottingAreaHeight;
 
@@ -109,16 +116,16 @@ export class PoChartAxisComponent {
     this.axisYPoints = [...outerYPoints, ...innerYPoints];
   }
 
-  private setAxisYOuterPoints(startY: number, endY: number, containerSize) {
+  private setAxisYOuterPoints(startY: number, endY: number, containerSize: PoChartContainerSize) {
     const firstLineCoordinates = { coordinates: `M${AXISXLABELAREA} ${startY} L${AXISXLABELAREA} ${endY}` };
     const lastLineCoordinates = {
-      coordinates: `M${containerSize.containerWidth} ${startY} L${containerSize.containerWidth} ${endY}`
+      coordinates: `M${containerSize.svgWidth} ${startY} L${containerSize.svgWidth} ${endY}`
     };
 
     return [firstLineCoordinates, lastLineCoordinates];
   }
 
-  private setAxisYLabelPoints(categories: Array<any>, containerSize: any) {
+  private setAxisYLabelPoints(categories: Array<any>, containerSize: PoChartContainerSize) {
     this.axisYLabelPoints = categories.map((category: any, index: number) => {
       const label = category;
 
@@ -135,19 +142,19 @@ export class PoChartAxisComponent {
     return AXISXLABELAREA - labelPadding;
   }
 
-  private calculateAxisXCoordinateY(axisXGridLines: number, containerSize, index: number) {
+  private calculateAxisXCoordinateY(axisXGridLines: number, containerSize: PoChartContainerSize, index: number) {
     const yRatio = index / (axisXGridLines - 1);
 
     return containerSize.svgPlottingAreaHeight - containerSize.svgPlottingAreaHeight * yRatio;
   }
 
-  private calculateAxisYLabelYPoint(containerSize: any, index: number) {
+  private calculateAxisYLabelYPoint(containerSize: PoChartContainerSize, index: number) {
     const textPadding = PADDING / 3;
 
-    return containerSize.containerHeight - textPadding;
+    return containerSize.svgHeight - textPadding;
   }
 
-  private calculateAxisYCoordinateX(containerSize: any, categories: Array<any>, index: number) {
+  private calculateAxisYCoordinateX(containerSize: PoChartContainerSize, categories: Array<any>, index: number) {
     const xRatio = index / (categories.length - 1);
 
     return AXISXLABELAREA + PADDING * 2 + containerSize.svgPlottingAreaWidth * xRatio;

@@ -1,22 +1,23 @@
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { PoChartType } from '../enums/po-chart-type.enum';
 import { PoLineChartSeries } from '../interfaces/po-chart-line-series.interface';
+import { PoChartContainerSize } from '../interfaces/po-chart-container-size.interface';
+import { PoChartMinMaxValues } from '../interfaces/po-chart-min-max-values.interface';
 
 @Component({
   selector: 'po-chart-container',
   templateUrl: './po-chart-container.component.html'
 })
-export class PoChartContainerComponent implements OnInit {
+export class PoChartContainerComponent {
   viewBox;
 
   private _series: Array<PoLineChartSeries>;
-  private _containerSize;
+  private _containerSize: PoChartContainerSize;
 
   @Input('p-categories') categories: Array<any>;
 
-  // DEFINIR INTERFACE
-  @Input('p-container-size') set containerSize(value: any) {
+  @Input('p-container-size') set containerSize(value: PoChartContainerSize) {
     this._containerSize = value;
     this.viewBox = this.setViewBox();
   }
@@ -25,7 +26,7 @@ export class PoChartContainerComponent implements OnInit {
     return this._containerSize;
   }
 
-  @Input('p-min-max-values') minMaxValues: any;
+  @Input('p-min-max-values') minMaxValues: PoChartMinMaxValues;
 
   @Input('p-type') type: PoChartType;
 
@@ -37,16 +38,14 @@ export class PoChartContainerComponent implements OnInit {
     return this._series;
   }
 
-  constructor(private elementRef: ElementRef) {}
-
-  ngOnInit(): void {}
+  constructor() {}
 
   setViewBox() {
-    const { containerWidth, containerHeight } = this.containerSize;
+    const { svgWidth, svgHeight } = this.containerSize;
 
     // Tratamento necessário para que não corte o vetor nas extremidades
     const offsetXY = 1;
 
-    return `${offsetXY} -${offsetXY} ${containerWidth} ${containerHeight}`;
+    return `${offsetXY} -${offsetXY} ${svgWidth} ${svgHeight}`;
   }
 }

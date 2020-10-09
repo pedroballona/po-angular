@@ -8,6 +8,7 @@ import { PoChartType } from './enums/po-chart-type.enum';
 import { PoDonutChartSeries } from './po-chart-types/po-chart-donut/po-chart-donut-series.interface';
 import { PoPieChartSeries } from './po-chart-types/po-chart-pie/po-chart-pie-series.interface';
 import { PoLineChartSeries } from './interfaces/po-chart-line-series.interface';
+import { PoChartMinMaxValues } from './interfaces/po-chart-min-max-values.interface';
 
 const poChartDefaultHeight = 400;
 const poChartMinHeight = 200;
@@ -37,7 +38,7 @@ export abstract class PoChartBaseComponent {
   private _series: Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries> | PoChartGaugeSerie;
   private _type: PoChartType = poChartTypeDefault;
 
-  minMaxValues: any;
+  minMaxValues: PoChartMinMaxValues;
 
   // manipulação das séries tratadas internamente para preservar 'p-series';
   protected chartSeries: PoChartSeries;
