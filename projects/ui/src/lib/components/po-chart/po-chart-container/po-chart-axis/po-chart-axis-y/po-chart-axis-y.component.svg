@@ -1,11 +1,5 @@
-<!-- AXIS Y OUTER -->
-<svg:polyline *ngFor="let item of counter(2); let i = index;"
-  class="po-chart-axis-line"
-  [attr.points]="setAxisYOuterPoints(i)">
-</svg:polyline>
-
 <!-- AXIS Y INNER -->
-<svg:polyline *ngFor="let category of categories; let i = index;"
+<svg:polyline *ngFor="let item of axisYPoints"
   class="po-chart-axis-line"
-  [attr.points]="setAxisYPoints(i)">
+  [attr.points]="item.coordinates">
 </svg:polyline>

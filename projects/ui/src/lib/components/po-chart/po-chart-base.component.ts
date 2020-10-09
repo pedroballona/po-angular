@@ -7,7 +7,7 @@ import { PoChartGaugeSerie } from './po-chart-types/po-chart-gauge/po-chart-gaug
 import { PoChartType } from './enums/po-chart-type.enum';
 import { PoDonutChartSeries } from './po-chart-types/po-chart-donut/po-chart-donut-series.interface';
 import { PoPieChartSeries } from './po-chart-types/po-chart-pie/po-chart-pie-series.interface';
-import { PoLineChartSeries } from './po-chart-container/interfaces/po-chart-line-series.interface';
+import { PoLineChartSeries } from './interfaces/po-chart-line-series.interface';
 
 const poChartDefaultHeight = 400;
 const poChartMinHeight = 200;

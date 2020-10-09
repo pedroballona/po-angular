@@ -1,19 +1,29 @@
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 
 import { PoChartType } from '../enums/po-chart-type.enum';
-import { PoLineChartSeries } from './interfaces/po-chart-line-series.interface';
+import { PoLineChartSeries } from '../interfaces/po-chart-line-series.interface';
 
 @Component({
   selector: 'po-chart-container',
   templateUrl: './po-chart-container.component.html'
 })
 export class PoChartContainerComponent implements OnInit {
+  viewBox;
+
   private _series: Array<PoLineChartSeries>;
+  private _containerSize;
 
   @Input('p-categories') categories: Array<any>;
 
   // DEFINIR INTERFACE
-  @Input('p-container-size') containerSize: any;
+  @Input('p-container-size') set containerSize(value: any) {
+    this._containerSize = value;
+    this.viewBox = this.setViewBox();
+  }
+
+  get containerSize() {
+    return this._containerSize;
+  }
 
   @Input('p-min-max-values') minMaxValues: any;
 

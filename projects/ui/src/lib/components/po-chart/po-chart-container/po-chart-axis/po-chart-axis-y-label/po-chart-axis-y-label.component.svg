@@ -1,7 +1,7 @@
-<svg:text *ngFor="let category of categories; let i = index;"
+<svg:text *ngFor="let item of axisYLabelPoints"
   class="po-chart-axis-y-label" 
-  [attr.x]="calculateAxisLabelXPoint(i)"
-  [attr.y]="calculateAxisLabelYPoint(i)">
-  {{ category }}
+  [attr.x]="item.xCoordinate"
+  [attr.y]="item.yCoordinate">
+  {{ item.label }}
 </svg:text> 
 

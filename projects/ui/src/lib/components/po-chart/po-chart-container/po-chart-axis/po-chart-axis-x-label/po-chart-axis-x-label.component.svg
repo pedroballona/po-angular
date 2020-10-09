@@ -1,8 +1,8 @@
-<svg:text *ngFor="let item of counter(axisXGridLines); let i = index;"
+<svg:text *ngFor="let item of axisXLabelPoints"
   class="po-chart-axis-x-label" 
   dominant-baseline="middle"
-  [attr.x]="calculateAxisLabelXPoint(i)"
-  [attr.y]="calculateAxisLabelYPoint(i)">
-  {{ axisXLabels[i] }}
+  [attr.x]="item.xCoordinate"
+  [attr.y]="item.yCoordinate">
+  {{ item.label }}
 </svg:text> 
 

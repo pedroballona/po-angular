@@ -25,6 +25,7 @@ import { PoChartDynamicTypeComponent } from './po-chart-types/po-chart-dynamic-t
 import { PoChartGaugeComponent } from './po-chart-types/po-chart-gauge/po-chart-gauge.component';
 import { PoChartPieComponent } from './po-chart-types/po-chart-pie/po-chart-pie.component';
 import { PoChartType } from './enums/po-chart-type.enum';
+import { PoChartContainerSize } from './interfaces/po-chart-container-size.interface';
 
 /**
  * @docsExtends PoChartBaseComponent
@@ -63,6 +64,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     [PoChartType.Pie]: PoChartPieComponent
   };
 
+  containerSize: PoChartContainerSize;
   colors: Array<string> = [];
 
   @ViewChild('chartContainer', { read: ViewContainerRef, static: true })
@@ -93,10 +95,15 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
   }
 
   @HostListener('window:resize')
-  onResize = () => this.windowResizeListener.next();
+  onResize = () => {
+    this.windowResizeListener.next();
+    this.getContainerSize();
+  };
 
   ngAfterViewInit() {
     this.initialized = true;
+
+    this.getContainerSize();
   }
 
   ngDoCheck() {
@@ -119,6 +126,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
   ngOnInit() {
     this.getSeriesColor();
+    this.getContainerSize();
   }
 
   rebuildComponent() {
@@ -230,6 +238,12 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
       instance.chartWrapper = this.chartWrapper.nativeElement.offsetWidth;
       instance.chartHeader = this.chartHeader.nativeElement.offsetHeight;
       instance.chartLegend = this.chartLegendHeight(this.chartLegend);
+
+      const chartWrapperWidth = this.chartWrapper.nativeElement.offsetWidth;
+      const chartHeaderHeight = this.chartHeader?.nativeElement.offsetHeight;
+      const chartLegendHeight = this.chartLegend?.nativeElement.offsetHeight;
+
+      this.containerSize = calculateContainerSize(this.height, chartWrapperWidth, chartHeaderHeight, chartLegendHeight);
     });
   }
 
@@ -238,6 +252,6 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     const chartHeaderHeight = this.chartHeader?.nativeElement.offsetHeight;
     const chartLegendHeight = this.chartLegend?.nativeElement.offsetHeight;
 
-    return calculateContainerSize(this.height, chartWrapperWidth, chartHeaderHeight, chartLegendHeight);
+    this.containerSize = calculateContainerSize(this.height, chartWrapperWidth, chartHeaderHeight, chartLegendHeight);
   }
 }

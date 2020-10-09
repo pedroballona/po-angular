@@ -2,7 +2,7 @@
   #elementu
   class="po-chart-svg-element"
   preserveAspectRatio="xMidYMin meet"
-  [attr.viewBox]="setViewBox()"
+  [attr.viewBox]="viewBox"
   [attr.width]="containerSize.containerWidth"
   [attr.height]="containerSize.containerHeight"
 >
@@ -10,7 +10,6 @@
     po-chart-axis
     [p-container-size]="containerSize"
     [p-categories]="categories"
-    [p-series]="series"
     [p-min-max-values]="minMaxValues"
   ></svg:g>
 </svg:svg>

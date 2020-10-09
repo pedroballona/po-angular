@@ -1,4 +1,4 @@
-import { PoLineChartSeries } from '../po-chart-container/interfaces/po-chart-line-series.interface';
+import { PoLineChartSeries } from '../interfaces/po-chart-line-series.interface';
 
 // retorna min e max values
 export function calculateMaxValue(series: Array<any>) {

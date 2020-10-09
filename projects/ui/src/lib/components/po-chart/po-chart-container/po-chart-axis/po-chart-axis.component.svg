@@ -1,26 +1,11 @@
 <!-- AXIS X -->
-  <svg:g po-chart-axis-x
-    [p-axis-x-grid-lines]="axisXGridLines"
-    [p-container-size]="containerSize">
-  </svg:g>
+<svg:g po-chart-axis-x [p-axis-x-points]="axisXPoints"></svg:g>
 
-  <!-- AXIS X LABELS-->
-  <svg:g po-chart-axis-x-label
-    [p-min-max-values]="minMaxValues"
-    [p-container-size]="containerSize"
-    [p-axis-x-grid-lines]="axisXGridLines"
-    >
-  </svg:g>
+<!-- AXIS X LABELS-->
+<svg:g po-chart-axis-x-label [p-axis-x-label-points]="axisXLabelPoints"></svg:g>
 
 <!-- AXIS Y -->
-  <svg:g po-chart-axis-y
-    [p-categories]="categories"
-    [p-container-size]="containerSize">
-  </svg:g>
+<svg:g po-chart-axis-y [p-axis-y-points]="axisYPoints"></svg:g>
  
-   <!-- AXIS Y LABELS-->
-  <svg:g po-chart-axis-y-label
-    [p-container-size]="containerSize"
-    [p-categories]="categories"
-    >
-  </svg:g>
+  <!-- AXIS Y LABELS-->
+<svg:g po-chart-axis-y-label [p-axis-y-label-points]="axisYLabelPoints"></svg:g>
