@@ -64,7 +64,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     [PoChartType.Pie]: PoChartPieComponent
   };
 
-  containerSize: PoChartContainerSize;
+  containerSize: any;
   colors: Array<string> = [];
 
   @ViewChild('chartContainer', { read: ViewContainerRef, static: true })

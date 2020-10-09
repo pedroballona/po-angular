@@ -75,7 +75,7 @@ export class PoChartAxisComponent {
       const endX = containerSize.containerWidth;
       const yCoordinate = this.calculateAxisXCoordinateY(axisXGridLines, containerSize, index);
 
-      const coordinates = `${startX}, ${yCoordinate}, ${endX}, ${yCoordinate}`;
+      const coordinates = `M${startX} ${yCoordinate} L${endX}, ${yCoordinate}`;
 
       return { coordinates };
     });
@@ -96,12 +96,12 @@ export class PoChartAxisComponent {
     const startY = 0;
     const endY = containerSize.svgPlottingAreaHeight;
 
-    const outerYPoints = this.setAxisOuterPoints(startY, endY, containerSize);
+    const outerYPoints = this.setAxisYOuterPoints(startY, endY, containerSize);
 
     const innerYPoints = categories.map((category: any, index: number) => {
       const xCoordinate = this.calculateAxisYCoordinateX(containerSize, categories, index);
 
-      const coordinates = `${xCoordinate}, ${startY}, ${xCoordinate}, ${endY}`;
+      const coordinates = `M${xCoordinate} ${startY} L${xCoordinate}, ${endY}`;
 
       return { coordinates };
     });
@@ -109,10 +109,10 @@ export class PoChartAxisComponent {
     this.axisYPoints = [...outerYPoints, ...innerYPoints];
   }
 
-  private setAxisOuterPoints(startY: number, endY: number, containerSize) {
-    const firstLineCoordinates = { coordinates: `${AXISXLABELAREA}, ${startY}, ${AXISXLABELAREA}, ${endY}` };
+  private setAxisYOuterPoints(startY: number, endY: number, containerSize) {
+    const firstLineCoordinates = { coordinates: `M${AXISXLABELAREA} ${startY} L${AXISXLABELAREA} ${endY}` };
     const lastLineCoordinates = {
-      coordinates: `${containerSize.containerWidth}, ${startY}, ${containerSize.containerWidth}, ${endY}`
+      coordinates: `M${containerSize.containerWidth} ${startY} L${containerSize.containerWidth} ${endY}`
     };
 
     return [firstLineCoordinates, lastLineCoordinates];

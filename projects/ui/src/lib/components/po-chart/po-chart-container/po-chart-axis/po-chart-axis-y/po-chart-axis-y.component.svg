@@ -1,5 +1,5 @@
 <!-- AXIS Y INNER -->
-<svg:polyline *ngFor="let item of axisYPoints"
-  class="po-chart-axis-line"
-  [attr.points]="item.coordinates">
-</svg:polyline>
+<svg:path *ngFor="let item of axisYPoints"
+  class="po-chart-axis-path"
+  [attr.d]="item.coordinates">
+</svg:path>
