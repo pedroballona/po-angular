@@ -5,6 +5,7 @@
 
   <po-chart-container
     *ngIf="isChartLineType"
+    [p-axis-options]="axisOptions"
     [p-type]="type"
     [p-series]="series"
     [p-min-max-values]="minMaxValues"

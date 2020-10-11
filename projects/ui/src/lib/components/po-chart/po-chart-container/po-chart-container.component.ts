@@ -4,6 +4,7 @@ import { PoChartType } from '../enums/po-chart-type.enum';
 import { PoLineChartSeries } from '../interfaces/po-chart-line-series.interface';
 import { PoChartContainerSize } from '../interfaces/po-chart-container-size.interface';
 import { PoChartMinMaxValues } from '../interfaces/po-chart-min-max-values.interface';
+import { PoChartAxes } from '../interfaces/po-chart-axes.interface';
 
 @Component({
   selector: 'po-chart-container',
@@ -27,6 +28,8 @@ export class PoChartContainerComponent {
   }
 
   @Input('p-min-max-values') minMaxValues: PoChartMinMaxValues;
+
+  @Input('p-axis-options') axisOptions?: PoChartAxes;
 
   @Input('p-type') type: PoChartType;
 

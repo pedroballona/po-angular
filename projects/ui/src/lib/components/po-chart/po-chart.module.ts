@@ -10,12 +10,14 @@ import { PoChartGaugeTextContentComponent } from './po-chart-types/po-chart-gaug
 import { PoChartLegendComponent } from './po-chart-legend/po-chart-legend.component';
 import { PoChartPieComponent } from './po-chart-types/po-chart-pie/po-chart-pie.component';
 import { PoChartContainerComponent } from './po-chart-container/po-chart-container.component';
-import { ChartLineComponent } from './po-chart-container/chart-line/chart-line.component';
+import { PoChartLineComponent } from './po-chart-container/po-chart-line/po-chart-line.component';
 import { PoChartAxisComponent } from './po-chart-container/po-chart-axis/po-chart-axis.component';
 import { PoChartAxisXComponent } from './po-chart-container/po-chart-axis/po-chart-axis-x/po-chart-axis-x.component';
 import { PoChartAxisYComponent } from './po-chart-container/po-chart-axis/po-chart-axis-y/po-chart-axis-y.component';
 import { PoChartAxisXLabelComponent } from './po-chart-container/po-chart-axis/po-chart-axis-x-label/po-chart-axis-x-label.component';
 import { PoChartAxisYLabelComponent } from './po-chart-container/po-chart-axis/po-chart-axis-y-label/po-chart-axis-y-label.component';
+import { PoChartSeriesPathComponent } from './po-chart-container/po-chart-line/po-chart-series-path/po-chart-series-path.component';
+import { PoChartSeriesPointComponent } from './po-chart-container/po-chart-line/po-chart-series-point/po-chart-series-point.component';
 
 /**
  * @description
@@ -32,12 +34,14 @@ import { PoChartAxisYLabelComponent } from './po-chart-container/po-chart-axis/p
     PoChartPieComponent,
     PoChartLegendComponent,
     PoChartContainerComponent,
-    ChartLineComponent,
+    PoChartLineComponent,
     PoChartAxisComponent,
     PoChartAxisXComponent,
     PoChartAxisYComponent,
     PoChartAxisXLabelComponent,
-    PoChartAxisYLabelComponent
+    PoChartAxisYLabelComponent,
+    PoChartSeriesPathComponent,
+    PoChartSeriesPointComponent
   ],
   exports: [PoChartComponent]
 })

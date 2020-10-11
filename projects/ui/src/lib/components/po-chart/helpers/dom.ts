@@ -1,4 +1,4 @@
-import { PADDING, AXISXLABELAREA } from './default-values';
+import { PADDING, AXIS_X_LABEL_AREA } from './default-values';
 import { PoChartContainerSize } from '../interfaces/po-chart-container-size.interface';
 
 /**
@@ -17,7 +17,7 @@ export function calculateContainerSize(
 
   // Largura da área de plotagem
   // Largura container SVG - PADDING LEFT - (AXIS X LABEL AREA: padding x 2) - (SVG AXIS INTERNAL PLOT AREA: padding left + padding left) - PADDING RIGHT
-  const svgPlottingAreaWidth = svgWidth - AXISXLABELAREA - PADDING * 4;
+  const svgPlottingAreaWidth = svgWidth - AXIS_X_LABEL_AREA - PADDING * 4;
 
   // Altura do container
   const subtractedHeights = chartHeight - chartHeaderHeight - chartLegendHeight - PADDING * 2;
@@ -27,7 +27,7 @@ export function calculateContainerSize(
 
   // Altura da área de plotagem
   // Subtrai a altura do container SVG pelos paddings superior e inferior.
-  const svgPlottingAreaHeight = svgHeight - PADDING;
+  const svgPlottingAreaHeight = svgHeight - PADDING - 8;
 
   return {
     svgWidth,

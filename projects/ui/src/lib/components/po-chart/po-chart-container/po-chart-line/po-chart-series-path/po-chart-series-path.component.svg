@@ -1,0 +1,4 @@
+<svg:path *ngFor="let item of seriesPoints; let i = index"
+  [class]="'po-chart-line-path ' + colors[i]"
+  [attr.d]="item.coordinates">
+</svg:path> 

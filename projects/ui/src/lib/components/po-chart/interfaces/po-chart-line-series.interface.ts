@@ -7,7 +7,7 @@
  */
 export interface PoLineChartSeries {
   /** Define o valor da categoria do objeto. */
-  categories: Array<any>;
+  categories: Array<string>;
 
   /** Define a lista de valores para a série. */
   values: Array<number>;

@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChartLineComponent } from './chart-line.component';
+import { PoChartLineComponent } from './po-chart-line.component';
 
-describe('ChartLineComponent', () => {
-  let component: ChartLineComponent;
-  let fixture: ComponentFixture<ChartLineComponent>;
+describe('PoChartLineComponent', () => {
+  let component: PoChartLineComponent;
+  let fixture: ComponentFixture<PoChartLineComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ChartLineComponent]
+      declarations: [PoChartLineComponent]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ChartLineComponent);
+    fixture = TestBed.createComponent(PoChartLineComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

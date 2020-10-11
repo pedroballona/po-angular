@@ -10,8 +10,9 @@
   <svg:g
     po-chart-axis
     [p-container-size]="containerSize"
+    [p-axis-options]="axisOptions"
     [p-categories]="categories"
-    [p-min-max-values]="minMaxValues"
+    [p-min-max-axis-values]="minMaxValues"
   ></svg:g>
 
   <!-- chart line -->
@@ -19,7 +20,7 @@
     po-chart-line
     [p-series]="series"
     [p-categories]="categories"
-    [p-min-max-values]="minMaxValues"
+    [p-min-max-series-values]="minMaxValues"
     [p-container-size]="containerSize"
   ></svg:g>
 </svg:svg>
