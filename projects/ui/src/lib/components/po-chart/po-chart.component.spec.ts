@@ -3,7 +3,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { PoChartBaseComponent } from './po-chart-base.component';
-import { PoChartColors } from './po-chart-colors.constant';
+import { PoChartColors } from './helpers/po-chart-colors.constant';
 import { PoChartComponent } from './po-chart.component';
 import { PoChartModule } from './po-chart.module';
 import { PoChartPieComponent } from './po-chart-types/po-chart-pie/po-chart-pie.component';

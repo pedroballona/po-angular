@@ -7,7 +7,7 @@ import { PADDING } from '../../../helpers/default-values';
   templateUrl: './po-chart-axis-y-label.component.svg'
 })
 export class PoChartAxisYLabelComponent implements OnInit {
-  @Input('p-axis-y-label-points') axisYLabelPoints: Array<any>;
+  @Input('p-axis-y-label-points') axisYLabelPoints: Array<{ label: string; xCoordinate: string; yCoordinate: string }>;
 
   constructor() {}
 

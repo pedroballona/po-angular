@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
   templateUrl: './po-chart-axis-x-label.component.svg'
 })
 export class PoChartAxisXLabelComponent {
-  @Input('p-axis-x-label-points') axisXLabelPoints: any;
+  @Input('p-axis-x-label-points') axisXLabelPoints: Array<{ label: string; xCoordinate: string; yCoordinate: string }>;
 
   constructor() {}
 }

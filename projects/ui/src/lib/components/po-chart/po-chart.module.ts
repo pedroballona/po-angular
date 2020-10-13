@@ -16,7 +16,7 @@ import { PoChartAxisXComponent } from './po-chart-container/po-chart-axis/po-cha
 import { PoChartAxisYComponent } from './po-chart-container/po-chart-axis/po-chart-axis-y/po-chart-axis-y.component';
 import { PoChartAxisXLabelComponent } from './po-chart-container/po-chart-axis/po-chart-axis-x-label/po-chart-axis-x-label.component';
 import { PoChartAxisYLabelComponent } from './po-chart-container/po-chart-axis/po-chart-axis-y-label/po-chart-axis-y-label.component';
-import { PoChartSeriesPathComponent } from './po-chart-container/po-chart-line/po-chart-series-path/po-chart-series-path.component';
+import { PoChartPathComponent } from './po-chart-container/po-chart-path/po-chart-path.component';
 import { PoChartSeriesPointComponent } from './po-chart-container/po-chart-line/po-chart-series-point/po-chart-series-point.component';
 
 /**
@@ -40,7 +40,7 @@ import { PoChartSeriesPointComponent } from './po-chart-container/po-chart-line/
     PoChartAxisYComponent,
     PoChartAxisXLabelComponent,
     PoChartAxisYLabelComponent,
-    PoChartSeriesPathComponent,
+    PoChartPathComponent,
     PoChartSeriesPointComponent
   ],
   exports: [PoChartComponent]

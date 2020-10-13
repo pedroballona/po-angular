@@ -1,0 +1,10 @@
+<svg:circle *ngFor="let item of coordinates"
+  class="po-chart-line-point"
+  [attr.cx]="item.xCoordinate"
+  [attr.cy]="item.yCoordinate"
+  [attr.r]="radius"
+  [attr.stroke]="color"
+  (mouseenter) ="onMouseEnter($event)"
+  (mouseleave) ="onMouseLeave($event)"
+  >
+</svg:circle>

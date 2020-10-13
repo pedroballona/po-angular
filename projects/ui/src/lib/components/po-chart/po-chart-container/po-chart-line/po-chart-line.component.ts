@@ -1,18 +1,22 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 
 import { AXIS_X_LABEL_AREA, PADDING, PLOT_AREA_TOP_PADDING } from '../../helpers/default-values';
 import { getSeriePercentage } from '../../helpers/maths';
 
+import { PoChartColorService } from '../../services/po-chart-color.service';
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
-import { PoLineChartSeries } from '../../interfaces/po-chart-line-series.interface';
 import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
+import { PoChartType } from '../../enums/po-chart-type.enum';
+import { PoLineChartSeries } from '../../interfaces/po-chart-line-series.interface';
 
 @Component({
   selector: '[po-chart-line]',
   templateUrl: './po-chart-line.component.svg'
 })
 export class PoChartLineComponent {
-  seriesPathCoordinates: any;
+  colors: Array<string>;
+  seriesPathsCoordinates: Array<{ coordinates: string }>;
+  seriesPointsCoordinates: Array<Array<{ xCoordinate: number; yCoordinate: number }>> = [];
 
   private _containerSize: PoChartContainerSize = {};
   private _minMaxSeriesValues: PoChartMinMaxValues = {};
@@ -28,7 +32,7 @@ export class PoChartLineComponent {
     return this._containerSize;
   }
 
-  @Input('p-categories') categories: Array<any> = [];
+  @Input('p-categories') categories: Array<string> = [];
 
   @Input('p-min-max-series-values') set minMaxSeriesValues(value: PoChartMinMaxValues) {
     this._minMaxSeriesValues = value;
@@ -41,6 +45,7 @@ export class PoChartLineComponent {
   @Input('p-series') set series(value: Array<PoLineChartSeries>) {
     this._series = value;
 
+    this.colors = this.colorService.getSeriesColor(this._series, PoChartType.Line);
     this.seriePathPointsDefinition(this.containerSize, this.categories, this._series, this.minMaxSeriesValues);
   }
 
@@ -48,34 +53,59 @@ export class PoChartLineComponent {
     return this._series;
   }
 
-  constructor() {}
+  @ViewChild('chartLine') chartLine: ElementRef;
+
+  constructor(private colorService: PoChartColorService, private renderer: Renderer2, private elementRef: ElementRef) {}
 
   seriePathPointsDefinition(
     containerSize: PoChartContainerSize,
-    categories: Array<any>,
-    series: Array<any>,
+    categories: Array<string>,
+    series: Array<PoLineChartSeries>,
     minMaxSeriesValues: PoChartMinMaxValues
   ) {
-    this.seriesPathCoordinates = series.map((serie: PoLineChartSeries) => {
-      let coordinates = '';
+    this.seriesPointsCoordinates = [];
+
+    this.seriesPathsCoordinates = series.map((serie: PoLineChartSeries) => {
+      let pathCoordinates: string = '';
+      let pointCoordinates: Array<{ xCoordinate: number; yCoordinate: number }> = [];
 
       serie.values.forEach((serieValue, index) => {
         const svgPathCommand = index === 0 ? 'M' : 'L';
 
         // eixo X
         const xRatio = index / (categories.length - 1);
-        const xCoordinate = AXIS_X_LABEL_AREA + PADDING * 2 + containerSize.svgPlottingAreaWidth * xRatio;
+        const svgAxisSideSpacing = this.calculateSideSpacing(containerSize.svgWidth, categories.length);
+
+        const xCoordinate = AXIS_X_LABEL_AREA + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
 
         // eixo Y
         const yRratio = getSeriePercentage(minMaxSeriesValues, serieValue);
-
         const yCoordinate =
           containerSize.svgPlottingAreaHeight - containerSize.svgPlottingAreaHeight * yRratio + PLOT_AREA_TOP_PADDING;
 
-        coordinates += ` ${svgPathCommand}${xCoordinate} ${yCoordinate}`;
+        // coordenadas do círculo
+        pointCoordinates = [...pointCoordinates, { xCoordinate, yCoordinate }];
+
+        // coordenadas da linha
+        pathCoordinates += ` ${svgPathCommand}${xCoordinate} ${yCoordinate}`;
       });
 
-      return { coordinates };
+      this.seriesPointsCoordinates = [...this.seriesPointsCoordinates, pointCoordinates];
+
+      return { coordinates: pathCoordinates };
     });
+  }
+
+  // É necessário reordenar os svgs on hover pois eventualmente os elemntos svg ficam por trás de outros. Não há z-index para svgElement.
+  reorderSVGGroup(pathGroup: string) {
+    const pathGroupElement = this.elementRef.nativeElement.querySelectorAll(`.${pathGroup}`);
+
+    this.renderer.appendChild(this.chartLine.nativeElement, pathGroupElement[0]);
+  }
+
+  private calculateSideSpacing(containerWidth: PoChartContainerSize['svgWidth'], categoriesLength: number): number {
+    const halfCategoryWidth = (containerWidth - AXIS_X_LABEL_AREA) / categoriesLength / 2;
+
+    return halfCategoryWidth <= PADDING ? halfCategoryWidth : PADDING;
   }
 }

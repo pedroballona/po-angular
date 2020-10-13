@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
   templateUrl: './po-chart-axis-x.component.svg'
 })
 export class PoChartAxisXComponent {
-  @Input('p-axis-x-points') axisXPoints: any;
+  @Input('p-axis-x-points') axisXPoints: Array<{ coordinates: string }>;
 
   constructor() {}
 }

@@ -109,7 +109,7 @@ export abstract class PoChartBaseComponent {
   }
 
   /** Define as categorias das séries. */
-  @Input('p-categories') categories?: Array<any>;
+  @Input('p-categories') categories?: Array<string>;
 
   /** Define o título do gráfico. */
   @Input('p-title') title?: string;

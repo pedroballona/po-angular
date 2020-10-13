@@ -16,16 +16,14 @@ import {
 
 import { Subject } from 'rxjs';
 
-import { calculateContainerSize } from './helpers/dom';
-
 import { PoChartBaseComponent } from './po-chart-base.component';
-import { PoChartColors } from './po-chart-colors.constant';
+import { PoChartColorService } from './services/po-chart-color.service';
+import { PoSvgContainerService } from './services/po-svg-container.service';
 import { PoChartDonutComponent } from './po-chart-types/po-chart-donut/po-chart-donut.component';
 import { PoChartDynamicTypeComponent } from './po-chart-types/po-chart-dynamic-type.component';
 import { PoChartGaugeComponent } from './po-chart-types/po-chart-gauge/po-chart-gauge.component';
 import { PoChartPieComponent } from './po-chart-types/po-chart-pie/po-chart-pie.component';
 import { PoChartType } from './enums/po-chart-type.enum';
-
 import { PoChartContainerSize } from './interfaces/po-chart-container-size.interface';
 
 /**
@@ -79,6 +77,8 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
   constructor(
     public changeDetector: ChangeDetectorRef,
+    private colorService: PoChartColorService,
+    private containerService: PoSvgContainerService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private differs: IterableDiffers
   ) {
@@ -114,7 +114,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     // evitando com isso, problemas com Tabs ou Divs que iniciem escondidas.
     if (charWrapperWidth && !this.calculatedElement && this.initialized) {
       this.calculatedElement = true;
-      this.getSeriesColor();
+      this.colors = this.colorService.getSeriesColor(this.chartSeries, this.type);
       // this.dynamicComponentSetting();
     }
 
@@ -126,14 +126,14 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
   }
 
   ngOnInit() {
-    this.getSeriesColor();
+    this.colors = this.colorService.getSeriesColor(this.chartSeries, this.type);
     this.getContainerSize();
   }
 
   rebuildComponent() {
     if (this.componentRef) {
       this.componentRef.destroy();
-      this.getSeriesColor();
+      this.colors = this.colorService.getSeriesColor(this.chartSeries, this.type);
       // this.dynamicComponentSetting();
     }
   }
@@ -146,7 +146,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     if (this.componentRef && this.differ) {
       const changeSeries = this.differ.diff(this.chartSeries);
       if (changeSeries) {
-        this.getSeriesColor();
+        this.colors = this.colorService.getSeriesColor(this.chartSeries, this.type);
         this.rebuildComponent();
       }
     }
@@ -178,33 +178,33 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     return this.mappings[typeName];
   }
 
-  private getSeriesColor() {
-    const colorsLength = PoChartColors.length - 1;
+  // private this.colorService.getSeriesColor() {
+  //   const colorsLength = PoChartColors.length - 1;
 
-    if (!this.chartSeries) {
-      return (this.colors = PoChartColors[colorsLength]);
-    }
-    if (this.type === PoChartType.Gauge) {
-      return (this.colors = PoChartColors[0]);
-    }
+  //   if (!this.chartSeries) {
+  //     return (this.colors = PoChartColors[colorsLength]);
+  //   }
+  //   if (this.type === PoChartType.Gauge) {
+  //     return (this.colors = PoChartColors[0]);
+  //   }
 
-    const seriesLength = this.chartSeries.length - 1;
+  //   const seriesLength = this.chartSeries.length - 1;
 
-    if (seriesLength > colorsLength) {
-      let colors = PoChartColors[colorsLength];
+  //   if (seriesLength > colorsLength) {
+  //     let colors = PoChartColors[colorsLength];
 
-      // recupera o resultado da divisao entre tamanho das series e o numero de cores disponiveis
-      const quantityDuplicates = seriesLength / colorsLength;
+  //     // recupera o resultado da divisao entre tamanho das series e o numero de cores disponiveis
+  //     const quantityDuplicates = seriesLength / colorsLength;
 
-      for (let i = 1; i <= quantityDuplicates; i++) {
-        colors = colors.concat(PoChartColors[colorsLength]);
-      }
+  //     for (let i = 1; i <= quantityDuplicates; i++) {
+  //       colors = colors.concat(PoChartColors[colorsLength]);
+  //     }
 
-      return (this.colors = colors);
-    }
+  //     return (this.colors = colors);
+  //   }
 
-    return (this.colors = PoChartColors[seriesLength]);
-  }
+  //   return (this.colors = PoChartColors[seriesLength]);
+  // }
 
   private removeWindowResizeListener() {
     if (this.onResize) {
@@ -244,7 +244,13 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
       const chartHeaderHeight = this.chartHeader?.nativeElement.offsetHeight;
       const chartLegendHeight = this.chartLegend?.nativeElement.offsetHeight;
 
-      this.containerSize = calculateContainerSize(this.height, chartWrapperWidth, chartHeaderHeight, chartLegendHeight);
+      this.containerSize = this.containerService.calculatesContainerMeasurements(
+        this.height,
+        chartWrapperWidth,
+        chartHeaderHeight,
+        chartLegendHeight,
+        this.categories.length
+      );
     });
   }
 
@@ -253,6 +259,12 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     const chartHeaderHeight = this.chartHeader?.nativeElement.offsetHeight;
     const chartLegendHeight = this.chartLegend?.nativeElement.offsetHeight;
 
-    this.containerSize = calculateContainerSize(this.height, chartWrapperWidth, chartHeaderHeight, chartLegendHeight);
+    this.containerSize = this.containerService.calculatesContainerMeasurements(
+      this.height,
+      chartWrapperWidth,
+      chartHeaderHeight,
+      chartLegendHeight,
+      this.categories.length
+    );
   }
 }

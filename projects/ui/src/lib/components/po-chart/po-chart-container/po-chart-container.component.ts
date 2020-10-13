@@ -16,7 +16,7 @@ export class PoChartContainerComponent {
   private _series: Array<PoLineChartSeries>;
   private _containerSize: PoChartContainerSize;
 
-  @Input('p-categories') categories: Array<any>;
+  @Input('p-categories') categories: Array<string>;
 
   @Input('p-container-size') set containerSize(value: PoChartContainerSize) {
     this._containerSize = value;
