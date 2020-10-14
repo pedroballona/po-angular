@@ -9,7 +9,7 @@ import { PoDonutChartSeries } from './po-chart-types/po-chart-donut/po-chart-don
 import { PoPieChartSeries } from './po-chart-types/po-chart-pie/po-chart-pie-series.interface';
 import { PoLineChartSeries } from './interfaces/po-chart-line-series.interface';
 import { PoChartMinMaxValues } from './interfaces/po-chart-min-max-values.interface';
-import { PoChartAxes } from './interfaces/po-chart-axes.interface';
+import { PoChartAxisOptions } from './interfaces/po-chart-axis-options.interface';
 
 const poChartDefaultHeight = 400;
 const poChartMinHeight = 200;
@@ -35,7 +35,7 @@ export type PoChartSeries = Array<PoDonutChartSeries | PoPieChartSeries | PoChar
  */
 @Directive()
 export abstract class PoChartBaseComponent {
-  private _axisOptions: PoChartAxes;
+  private _axisOptions: PoChartAxisOptions;
   private _height: number;
   private _series: Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries> | PoChartGaugeSerie;
   private _type: PoChartType = poChartTypeDefault;
@@ -135,7 +135,7 @@ export abstract class PoChartBaseComponent {
     return this._type;
   }
 
-  @Input('p-axis-options') set axisOptions(value: PoChartAxes) {
+  @Input('p-axis-options') set axisOptions(value: PoChartAxisOptions) {
     this._axisOptions = value;
   }
 

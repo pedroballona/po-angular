@@ -18,6 +18,7 @@ import { PoChartAxisXLabelComponent } from './po-chart-container/po-chart-axis/p
 import { PoChartAxisYLabelComponent } from './po-chart-container/po-chart-axis/po-chart-axis-y-label/po-chart-axis-y-label.component';
 import { PoChartPathComponent } from './po-chart-container/po-chart-path/po-chart-path.component';
 import { PoChartSeriesPointComponent } from './po-chart-container/po-chart-line/po-chart-series-point/po-chart-series-point.component';
+import { PoChartTooltipDirective } from './directives/po-chart-tooltip.directive';
 
 /**
  * @description
@@ -41,7 +42,8 @@ import { PoChartSeriesPointComponent } from './po-chart-container/po-chart-line/
     PoChartAxisXLabelComponent,
     PoChartAxisYLabelComponent,
     PoChartPathComponent,
-    PoChartSeriesPointComponent
+    PoChartSeriesPointComponent,
+    PoChartTooltipDirective
   ],
   exports: [PoChartComponent]
 })

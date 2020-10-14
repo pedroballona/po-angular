@@ -5,7 +5,7 @@ import { range } from '../../helpers/maths';
 
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
 import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
-import { PoChartAxes } from '../../interfaces/po-chart-axes.interface';
+import { PoChartAxisOptions } from '../../interfaces/po-chart-axis-options.interface';
 
 @Component({
   selector: '[po-chart-axis]',
@@ -19,13 +19,13 @@ export class PoChartAxisComponent {
   axisYLabelPoints: Array<{ label: string; xCoordinate: number; yCoordinate: number }>;
 
   private digitsPrecision: number = 0;
-  private _axisOptions: PoChartAxes;
+  private _axisOptions: PoChartAxisOptions;
   private _axisXGridLines: number = AXIS_X_GRID_LINES;
   private _categories: Array<string> = [];
   private _containerSize: PoChartContainerSize = {};
   private _minMaxAxisValues: PoChartMinMaxValues = {};
 
-  @Input('p-axis-options') set axisOptions(value: PoChartAxes) {
+  @Input('p-axis-options') set axisOptions(value: PoChartAxisOptions) {
     this._axisOptions = value;
 
     this.checkAxisOptions(this.minMaxAxisValues, this._axisOptions);
@@ -182,7 +182,7 @@ export class PoChartAxisComponent {
     return AXIS_X_LABEL_AREA + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
   }
 
-  private checkAxisOptions(minMaxAxisValues: PoChartMinMaxValues, axisOptions: PoChartAxes = {}): void {
+  private checkAxisOptions(minMaxAxisValues: PoChartMinMaxValues, axisOptions: PoChartAxisOptions = {}): void {
     const { minRange, maxRange, axisXGridLines } = axisOptions;
 
     this.axisXGridLines =

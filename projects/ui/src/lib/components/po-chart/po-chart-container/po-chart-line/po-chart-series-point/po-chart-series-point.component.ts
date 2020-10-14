@@ -8,6 +8,8 @@ const RADIUS_HOVER_SIZE = 10;
   templateUrl: './po-chart-series-point.component.svg'
 })
 export class PoChartSeriesPointComponent {
+  testeTooltip = { title: 'tooltip', x: 200, y: 200 };
+
   radius: number = RADIUS_DEFAULT_SIZE;
 
   @Input('p-color') color?: string;
@@ -22,7 +24,6 @@ export class PoChartSeriesPointComponent {
   constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
   onMouseEnter(event: any) {
-    console.log('eventt', event);
     this.renderer.setAttribute(event.target, 'r', RADIUS_HOVER_SIZE.toString());
     this.renderer.setStyle(event.target, 'fill', this.color);
 

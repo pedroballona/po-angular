@@ -3,7 +3,7 @@
  *
  * *Interface* que define os eixos do grid.
  */
-export interface PoChartAxes {
+export interface PoChartAxisOptions {
   /**
    * Número de linhas exibidas no eixo X.
    * - Valor padrão: '5';

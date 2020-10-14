@@ -1,4 +1,4 @@
-<svg:circle *ngFor="let item of coordinates"
+<svg:circle *ngFor="let item of coordinates" [p-chart-tooltip]="testeTooltip"
   class="po-chart-line-point"
   [attr.cx]="item.xCoordinate"
   [attr.cy]="item.yCoordinate"
