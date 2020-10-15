@@ -10,81 +10,133 @@ const TOP_AREA = 48;
   providers: [PoTooltipControlPositionService]
 })
 export class PoChartTooltipDirective extends PoChartTooltipBaseDirective implements OnInit {
-  tooltip;
-  tooltipText;
+  private arrowDirection: string;
+  private divArrow;
+  private divContent;
+  private isHidden: boolean;
+  private lastTooltipText: string;
+  private textContent;
+  private tooltipContent;
+  private tooltipOffset: number = 8;
 
-  @HostListener('mouseenter') onMouseEnter() {
-    if (!this.tooltip) {
-      this.show();
-    }
-  }
+  private eventListenerFunction: () => void;
 
-  // @HostListener('mouseleave') onMouseLeave() {
-  //   if (this.tooltip) { this.hide(); }
-  // }
-
-  constructor(private elementRef: ElementRef, private renderer: Renderer2) {
+  constructor(
+    private elementRef: ElementRef,
+    private renderer: Renderer2,
+    private poControlPosition: PoTooltipControlPositionService
+  ) {
     super();
   }
 
-  ngOnInit() {}
-
-  show() {
-    this.create();
-    this.renderer.addClass(this.tooltip, 'po-chart-tooltip-show');
+  ngOnInit() {
+    this.initScrollEventListenerFunction();
   }
 
-  hide() {
-    this.renderer.removeClass(this.tooltip, 'po-chart-tooltip-show');
-    window.setTimeout(() => {
-      this.renderer.removeChild(document.body, this.tooltip);
-      this.tooltip = null;
+  @HostListener('mouseenter') onMouseEnter() {
+    setTimeout(() => {
+      if (this.tooltip) {
+        console.log('entrou this.tooltip');
+        this.tooltipContent ? this.showTooltip() : this.createTooltip();
+
+        this.removeArrow(this.arrowDirection);
+
+        this.poControlPosition.adjustPosition(this.tooltipPosition);
+        this.arrowDirection = this.poControlPosition.getArrowDirection();
+
+        this.addArrow(this.arrowDirection);
+
+        this.lastTooltipText = this.tooltip;
+      }
     });
   }
 
-  createSvgTextElement() {
-    this.tooltipText = this.renderer.createElement('svg:text', 'svg');
-    this.tooltipText.textContent = 'samir tesdsfsfsdfsfsfte';
-    this.renderer.addClass(this.tooltipText, 'po-chart-tooltip-text');
-    this.renderer.setAttribute(this.tooltipText, 'x', (this.tooltipElement['x'] - 10).toString());
-    this.renderer.setAttribute(this.tooltipText, 'y', (this.tooltipElement['y'] - TOP_AREA).toString());
+  @HostListener('mouseleave') onMouseLeave() {
+    // necessita do timeout para conseguir adicionar ".po-invisible", pois quando tem alguns elementos
+    // próximos com tooltips e ficar passando o mouse em cima, os mesmos não estavam ficando invisiveis.
+    setTimeout(() => {
+      this.hideTooltip();
+    });
   }
 
-  create() {
-    this.createSvgTextElement();
-
-    const svgPointsGroup = this.renderer.parentNode(this.elementRef.nativeElement);
-
-    this.renderer.appendChild(svgPointsGroup, this.tooltipText);
-    const SVGRect = this.tooltipText.getBBox();
-    // this.renderer.removeChild(svgPointsGroup, this.tooltipText)
-    console.log('svgRect', SVGRect);
-
-    this.createRect(SVGRect);
+  private addArrow(arrowDirection) {
+    this.renderer.addClass(this.divArrow, `po-arrow-${arrowDirection}`);
   }
 
-  createRect(SVGRect) {
-    const svgPointsGroup = this.renderer.parentNode(this.elementRef.nativeElement);
+  private addScrollEventListener() {
+    window.addEventListener('scroll', this.eventListenerFunction, true);
+  }
 
-    const group = this.renderer.createElement('svg:g', 'svg');
+  // Monta a estrutura do tooltip
+  private createTooltip() {
+    this.tooltipContent = this.renderer.createElement('div');
+    this.renderer.addClass(this.tooltipContent, 'po-tooltip');
 
-    this.tooltip = this.renderer.createElement('svg:rect', 'svg');
-    this.renderer.addClass(this.tooltip, 'po-chart-tooltip');
-    this.renderer.setAttribute(this.tooltip, 'width', SVGRect.width);
-    this.renderer.setAttribute(this.tooltip, 'height', SVGRect.height);
-    this.renderer.setAttribute(this.tooltip, 'x', (this.tooltipElement['x'] - 10).toString());
-    this.renderer.setAttribute(this.tooltip, 'y', (this.tooltipElement['y'] - TOP_AREA - 20).toString());
-    this.renderer.setAttribute(this.tooltip, 'fill', 'yellow');
+    this.divArrow = this.renderer.createElement('div');
+    this.renderer.addClass(this.divArrow, 'po-tooltip-arrow');
 
-    this.renderer.appendChild(group, this.tooltip);
-    this.renderer.appendChild(group, this.tooltipText);
+    this.divContent = this.renderer.createElement('div');
+    this.renderer.addClass(this.divContent, 'po-tooltip-content');
 
-    this.renderer.appendChild(svgPointsGroup, group);
+    this.textContent = this.renderer.createText(this.tooltip);
 
-    // this.renderer.insertBefore(svgPointsGroup, this.tooltip, this.tooltipText);
+    this.renderer.appendChild(this.divContent, this.textContent);
+    this.renderer.appendChild(this.tooltipContent, this.divArrow);
+    this.renderer.appendChild(this.tooltipContent, this.divContent);
 
-    // this.renderer.appendChild(svgPointsGroup, this.tooltipText);
+    const wrapper = this.renderer.selectRootElement('.po-chart-wrapper', true);
 
-    // this.renderer.appendChild(this.elementRef, this.elementRef.nativeElement);
+    console.log('teste wrapper', wrapper);
+
+    this.renderer.appendChild(wrapper, this.tooltipContent);
+
+    this.poControlPosition.setElements(this.tooltipContent, this.tooltipOffset, this.elementRef);
+
+    this.addScrollEventListener();
+  }
+
+  private initScrollEventListenerFunction() {
+    this.eventListenerFunction = () => {
+      if (!this.isHidden) {
+        setTimeout(() => {
+          this.poControlPosition.adjustPosition(this.tooltipPosition);
+        });
+      }
+    };
+  }
+
+  private hideTooltip() {
+    if (this.tooltipContent) {
+      this.renderer.addClass(this.tooltipContent, 'po-invisible');
+      this.isHidden = true;
+
+      this.removeScrollEventListener();
+    }
+  }
+
+  private removeArrow(arrowDirection) {
+    if (this.elementRef.nativeElement.querySelector(`.po-arrow-${arrowDirection}`)) {
+      this.renderer.removeClass(this.divArrow, `po-arrow-${arrowDirection}`);
+    }
+  }
+
+  private removeScrollEventListener() {
+    window.removeEventListener('scroll', this.eventListenerFunction, true);
+  }
+
+  private showTooltip() {
+    this.renderer.removeClass(this.tooltipContent, 'po-invisible');
+    this.updateTextContent();
+    this.isHidden = false;
+
+    this.addScrollEventListener();
+  }
+
+  private updateTextContent() {
+    if (this.lastTooltipText !== this.tooltip) {
+      this.renderer.removeChild(this.divContent, this.textContent);
+      this.textContent = this.renderer.createText(this.tooltip);
+      this.renderer.appendChild(this.divContent, this.textContent);
+    }
   }
 }

@@ -11,24 +11,25 @@ const PO_TOOLTIP_POSITION_DEFAULT = 'bottom';
  */
 @Directive()
 export class PoChartTooltipBaseDirective {
-  private _tooltipElement: any;
+  private _tooltip: string = '';
   protected _tooltipPosition?: string = 'bottom';
 
   /**
    * @description
    *
-   * Habilita e atribui um texto ao po-tooltip.
+   * Habilita e atribui um texto ao po-tooltip, com limitação de 140 caracteres.
    */
-  @Input('p-chart-tooltip') set tooltipElement(tooltip: string) {
-    this._tooltipElement = tooltip;
-    // if (tooltip && tooltip.length > CONTENT_MAX_LENGTH) {
-    //   this._tooltipTitle = tooltip.substring(0, CONTENT_MAX_LENGTH);
-    // } else {
-    //   this._tooltipTitle = tooltip;
-    // }
+  @Input('p-chart-tooltip') set tooltip(tooltip: string) {
+    console.log('base');
+
+    if (tooltip && tooltip.length > CONTENT_MAX_LENGTH) {
+      this._tooltip = tooltip.substring(0, CONTENT_MAX_LENGTH);
+    } else {
+      this._tooltip = tooltip;
+    }
   }
-  get tooltipElement() {
-    return this._tooltipElement;
+  get tooltip() {
+    return this._tooltip;
   }
 
   /**
