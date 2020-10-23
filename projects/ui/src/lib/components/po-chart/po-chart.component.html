@@ -13,7 +13,8 @@
     [p-container-size]="containerSize"
   ></po-chart-container>
 
-  <ng-template #chartContainer *ngIf="!isChartLineType"></ng-template>
+  <!-- Diretiva para injeção de gráficos do tipo circular. Serão repassados para dentro do po-chart-container futuramente.  -->
+  <ng-template #chartContainer></ng-template>
 
   <div *ngIf="!isChartGaugeType">
     <ng-container *ngTemplateOutlet="chartLegendGroup"></ng-container>

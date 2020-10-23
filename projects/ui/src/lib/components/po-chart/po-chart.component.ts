@@ -66,8 +66,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
   containerSize: PoChartContainerSize;
   colors: Array<string> = [];
 
-  @ViewChild('chartContainer', { read: ViewContainerRef, static: true })
-  chartContainer: ViewContainerRef;
+  @ViewChild('chartContainer', { read: ViewContainerRef, static: true }) chartContainer: ViewContainerRef;
 
   @ViewChild('chartHeader', { static: true }) chartHeader: ElementRef;
 
@@ -115,7 +114,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     if (charWrapperWidth && !this.calculatedElement && this.initialized) {
       this.calculatedElement = true;
       this.colors = this.colorService.getSeriesColor(this.chartSeries, this.type);
-      // this.dynamicComponentSetting();
+      this.dynamicComponentSetting();
     }
 
     this.checkingForSerieChanges();
@@ -134,7 +133,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     if (this.componentRef) {
       this.componentRef.destroy();
       this.colors = this.colorService.getSeriesColor(this.chartSeries, this.type);
-      // this.dynamicComponentSetting();
+      this.dynamicComponentSetting();
     }
   }
 
@@ -249,7 +248,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
         chartWrapperWidth,
         chartHeaderHeight,
         chartLegendHeight,
-        this.categories.length
+        this.categories?.length
       );
     });
   }
@@ -264,7 +263,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
       chartWrapperWidth,
       chartHeaderHeight,
       chartLegendHeight,
-      this.categories.length
+      this.categories?.length
     );
   }
 }

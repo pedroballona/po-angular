@@ -22,7 +22,7 @@ export class PoSvgContainerService {
     chartWrapperWidth: number = 0,
     chartHeaderHeight: number = 0,
     chartLegendHeight: number = 0,
-    categoriesLength: number
+    categoriesLength: number = 0
   ): PoChartContainerSize {
     // Largura do container
     const svgWidth = chartWrapperWidth - PADDING * 2;
