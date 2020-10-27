@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { AXIS_X_LABEL_AREA, PADDING } from '../helpers/default-values';
+import { PoChartAxisXLabelArea, PoChartPadding } from '../helpers/po-chart-default-values.constant';
 import { PoChartContainerSize } from '../interfaces/po-chart-container-size.interface';
 
 @Injectable({
@@ -25,12 +25,12 @@ export class PoSvgContainerService {
     categoriesLength: number = 0
   ): PoChartContainerSize {
     // Largura do container
-    const svgWidth = chartWrapperWidth - PADDING * 2;
+    const svgWidth = chartWrapperWidth - PoChartPadding * 2;
 
     const centerX = chartWrapperWidth / 2;
 
     // Altura do container
-    const subtractedHeights = chartHeight - chartHeaderHeight - chartLegendHeight - PADDING * 2;
+    const subtractedHeights = chartHeight - chartHeaderHeight - chartLegendHeight - PoChartPadding * 2;
     const svgHeight = subtractedHeights <= 0 ? 0 : subtractedHeights;
 
     const centerY = svgHeight / 2;
@@ -40,18 +40,18 @@ export class PoSvgContainerService {
      * Contempla:
      *
      *             largura do svg: svgWidth
-     *             - área dos labels eixo X: AXIS_X_LABEL_AREA
+     *             - área dos labels eixo X: PoChartAxisXLabelArea
      *             - espaços laterais dentro do eixo: svgAxisSideSpace
      *
      * A largura máxima para 'svgAxisSideSpace' é de 48px.
      */
-    const categoryWidth = (svgWidth - AXIS_X_LABEL_AREA) / categoriesLength;
-    const svgAxisSideSpace = categoryWidth <= PADDING * 2 ? categoryWidth : PADDING * 2;
-    const svgPlottingAreaWidth = svgWidth - AXIS_X_LABEL_AREA - svgAxisSideSpace;
+    const categoryWidth = (svgWidth - PoChartAxisXLabelArea) / categoriesLength;
+    const svgAxisSideSpace = categoryWidth <= PoChartPadding * 2 ? categoryWidth : PoChartPadding * 2;
+    const svgPlottingAreaWidth = svgWidth - PoChartAxisXLabelArea - svgAxisSideSpace;
 
     // Altura da área de plotagem
     // Subtrai a altura do container SVG pelo padding superior + área para overflow de labels do eixo X.
-    const svgPlottingAreaHeight = svgHeight - PADDING - 8;
+    const svgPlottingAreaHeight = svgHeight - PoChartPadding - 8;
 
     return {
       svgWidth,

@@ -1,6 +1,10 @@
 import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
 
-import { AXIS_X_LABEL_AREA, PADDING, PLOT_AREA_TOP_PADDING } from '../../helpers/default-values';
+import {
+  PoChartAxisXLabelArea,
+  PoChartPadding,
+  PoChartPlotAreaPaddingTop
+} from '../../helpers/po-chart-default-values.constant';
 import { getSeriePercentage } from '../../helpers/maths';
 
 import { PoChartColorService } from '../../services/po-chart-color.service';
@@ -80,12 +84,14 @@ export class PoChartLineComponent {
         const xRatio = index / (categories.length - 1);
         const svgAxisSideSpacing = this.calculateSideSpacing(containerSize.svgWidth, categories.length);
 
-        const xCoordinate = AXIS_X_LABEL_AREA + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
+        const xCoordinate = PoChartAxisXLabelArea + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
 
         // eixo Y
         const yRratio = getSeriePercentage(minMaxSeriesValues, serieValue);
         const yCoordinate =
-          containerSize.svgPlottingAreaHeight - containerSize.svgPlottingAreaHeight * yRratio + PLOT_AREA_TOP_PADDING;
+          containerSize.svgPlottingAreaHeight -
+          containerSize.svgPlottingAreaHeight * yRratio +
+          PoChartPlotAreaPaddingTop;
 
         // coordenadas do círculo
         pointCoordinates = [...pointCoordinates, { serieValue, xCoordinate, yCoordinate }];
@@ -108,8 +114,8 @@ export class PoChartLineComponent {
   }
 
   private calculateSideSpacing(containerWidth: PoChartContainerSize['svgWidth'], categoriesLength: number): number {
-    const halfCategoryWidth = (containerWidth - AXIS_X_LABEL_AREA) / categoriesLength / 2;
+    const halfCategoryWidth = (containerWidth - PoChartAxisXLabelArea) / categoriesLength / 2;
 
-    return halfCategoryWidth <= PADDING ? halfCategoryWidth : PADDING;
+    return halfCategoryWidth <= PoChartPadding ? halfCategoryWidth : PoChartPadding;
   }
 }
