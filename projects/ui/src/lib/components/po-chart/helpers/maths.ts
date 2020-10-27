@@ -8,7 +8,7 @@ export function calculateMaxValue(series: Array<any>): PoChartMinMaxValues {
     series.map((serie: PoLineChartSeries) => {
       return Math.max.apply(
         Math,
-        serie.values.map((data: number) => {
+        serie.data.map((data: number) => {
           return data;
         })
       );
@@ -20,7 +20,7 @@ export function calculateMaxValue(series: Array<any>): PoChartMinMaxValues {
     series.map((serie: PoLineChartSeries) => {
       return Math.min.apply(
         Math,
-        serie.values.map((data: number) => {
+        serie.data.map((data: number) => {
           return data;
         })
       );

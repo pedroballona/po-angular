@@ -73,7 +73,7 @@ export class PoChartLineComponent {
       let pathCoordinates: string = '';
       let pointCoordinates: Array<{ serieValue: number; xCoordinate: number; yCoordinate: number }> = [];
 
-      serie.values.forEach((serieValue, index) => {
+      serie.data.forEach((serieValue, index) => {
         const svgPathCommand = index === 0 ? 'M' : 'L';
 
         // eixo X
