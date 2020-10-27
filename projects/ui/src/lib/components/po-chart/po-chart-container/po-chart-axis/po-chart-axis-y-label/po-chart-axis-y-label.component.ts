@@ -12,4 +12,8 @@ export class PoChartAxisYLabelComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  trackBy(index) {
+    return index;
+  }
 }

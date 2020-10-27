@@ -1,5 +1,5 @@
 <!-- AXIS Y INNER -->
-<svg:path *ngFor="let item of axisYPoints"
+<svg:path *ngFor="let item of axisYPoints; trackBy: trackBy"
   class="po-chart-axis-path"
   [attr.d]="item.coordinates">
 </svg:path>

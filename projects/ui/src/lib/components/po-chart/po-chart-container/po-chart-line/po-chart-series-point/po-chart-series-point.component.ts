@@ -21,6 +21,10 @@ export class PoChartSeriesPointComponent {
 
   constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
+  trackBy(index) {
+    return index;
+  }
+
   onMouseEnter(event: any) {
     this.renderer.setAttribute(event.target, 'r', RADIUS_HOVER_SIZE.toString());
     this.renderer.setStyle(event.target, 'fill', this.color);

@@ -8,4 +8,8 @@ export class PoChartAxisYComponent {
   @Input('p-axis-y-points') axisYPoints: Array<{ coordinates: string }>;
 
   constructor() {}
+
+  trackBy(index) {
+    return index;
+  }
 }

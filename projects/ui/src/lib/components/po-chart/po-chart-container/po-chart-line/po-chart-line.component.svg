@@ -1,6 +1,6 @@
 <svg:g #chartLine>
 
-  <svg:g *ngFor="let item of seriesPathsCoordinates; let i = index"
+  <svg:g *ngFor="let item of seriesPathsCoordinates; let i = index; trackBy: trackBy"
     [class]="'po-chart-line-path-group-' + i"
   >
     <!-- SERIES PATHS -->

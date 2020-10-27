@@ -8,4 +8,8 @@ export class PoChartAxisXLabelComponent {
   @Input('p-axis-x-label-points') axisXLabelPoints: Array<{ label: string; xCoordinate: string; yCoordinate: string }>;
 
   constructor() {}
+
+  trackBy(index) {
+    return index;
+  }
 }

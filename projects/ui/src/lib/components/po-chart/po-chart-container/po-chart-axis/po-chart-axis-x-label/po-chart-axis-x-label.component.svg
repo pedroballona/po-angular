@@ -1,4 +1,4 @@
-<svg:text *ngFor="let item of axisXLabelPoints"
+<svg:text *ngFor="let item of axisXLabelPoints; trackBy: trackBy"
   class="po-chart-axis-x-label" 
   dominant-baseline="middle"
   [attr.x]="item.xCoordinate"

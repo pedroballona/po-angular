@@ -165,12 +165,12 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
   }
 
   private dynamicComponentSetting() {
-    const instance = this.createComponent();
+    // const instance = this.createComponent();
 
-    this.setResizeListenerSubscribe(instance);
+    // this.setResizeListenerSubscribe(instance);
     this.changeDetector.detectChanges();
-    this.setClickSubscribe(instance);
-    this.setHoverSubscribe(instance);
+    // this.setClickSubscribe(instance);
+    // this.setHoverSubscribe(instance);
   }
 
   private getComponentType(typeName) {

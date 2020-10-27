@@ -57,6 +57,10 @@ export class PoChartLineComponent {
 
   constructor(private colorService: PoChartColorService, private renderer: Renderer2, private elementRef: ElementRef) {}
 
+  trackBy(index) {
+    return index;
+  }
+
   seriePathPointsDefinition(
     containerSize: PoChartContainerSize,
     categories: Array<string>,

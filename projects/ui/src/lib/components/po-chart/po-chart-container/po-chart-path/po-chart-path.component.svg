@@ -1,5 +1,4 @@
 <svg:path
-  [po-chart-animate]="animate" 
   class="po-chart-line-path"
   [attr.stroke]="color"
   [attr.d]="coordinates">
