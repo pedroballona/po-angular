@@ -6,11 +6,12 @@ import {
   PoChartPadding,
   PoChartPlotAreaPaddingTop
 } from '../../helpers/po-chart-default-values.constant';
-import { range } from '../../helpers/maths';
+import { PoMathsService } from '../../services/po-maths.service';
 
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
 import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
 import { PoChartAxisOptions } from '../../interfaces/po-chart-axis-options.interface';
+import { PoChartSeries } from '../../interfaces/po-chart-series.interface';
 
 @Component({
   selector: '[po-chart-axis]',
@@ -19,16 +20,27 @@ import { PoChartAxisOptions } from '../../interfaces/po-chart-axis-options.inter
 export class PoChartAxisComponent {
   axisXPoints: Array<{ coordinates: string }>;
   axisXLabelPoints: Array<{ label: string; xCoordinate: number; yCoordinate: number }>;
-
   axisYPoints: Array<{ coordinates: string }>;
   axisYLabelPoints: Array<{ label: string; xCoordinate: number; yCoordinate: number }>;
 
   private digitsPrecision: number = 0;
+  private minMaxAxisValues: PoChartMinMaxValues;
+
   private _axisOptions: PoChartAxisOptions;
   private _axisXGridLines: number = PoChartAxisXGridLines;
   private _categories: Array<string> = [];
   private _containerSize: PoChartContainerSize = {};
-  private _minMaxAxisValues: PoChartMinMaxValues = {};
+  private _series: Array<PoChartSeries> = [];
+
+  @Input('p-series') set series(value: Array<PoChartSeries>) {
+    this._series = value;
+
+    this.minMaxAxisValues = this.mathsService.calculateMinAndMaxValues(this._series);
+  }
+
+  get series() {
+    return this._series;
+  }
 
   @Input('p-axis-options') set axisOptions(value: PoChartAxisOptions) {
     this._axisOptions = value;
@@ -75,18 +87,7 @@ export class PoChartAxisComponent {
     return this._containerSize;
   }
 
-  @Input('p-min-max-axis-values') set minMaxAxisValues(value: PoChartMinMaxValues) {
-    this._minMaxAxisValues = value;
-
-    this.checkAxisOptions(this._minMaxAxisValues, this.axisOptions);
-    this.setAxisXLabelPoints(this.axisXGridLines, this.containerSize, this._minMaxAxisValues, this.digitsPrecision);
-  }
-
-  get minMaxAxisValues() {
-    return this._minMaxAxisValues;
-  }
-
-  constructor() {}
+  constructor(private mathsService: PoMathsService) {}
 
   private setAxisXPoints(axisXGridLines: number, containerSize: PoChartContainerSize) {
     this.axisXPoints = [...Array(axisXGridLines)].map((_, index: number) => {
@@ -106,7 +107,7 @@ export class PoChartAxisComponent {
     minMaxAxisValues: PoChartMinMaxValues,
     digitsPrecision: number
   ) {
-    const labels = range(minMaxAxisValues, axisXGridLines);
+    const labels = this.mathsService.range(minMaxAxisValues, axisXGridLines);
 
     this.axisXLabelPoints = labels.map((labelItem, index: number) => {
       const label = labelItem.toFixed(digitsPrecision);

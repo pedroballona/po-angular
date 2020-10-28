@@ -1,3 +1,5 @@
+import { PoChartSeries } from './po-chart-series.interface';
+
 /**
  * @usedBy PoChartComponent
  *
@@ -5,7 +7,7 @@
  *
  * Interface que define o objeto da série `PoChartType.Line`.
  */
-export interface PoLineChartSeries {
+export interface PoLineChartSeries extends PoChartSeries {
   /** Define o valor da categoria do objeto. */
   categories: Array<string>;
 

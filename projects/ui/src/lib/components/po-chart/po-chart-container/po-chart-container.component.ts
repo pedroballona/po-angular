@@ -3,7 +3,6 @@ import { Component, Input } from '@angular/core';
 import { PoChartType } from '../enums/po-chart-type.enum';
 import { PoLineChartSeries } from '../interfaces/po-chart-line-series.interface';
 import { PoChartContainerSize } from '../interfaces/po-chart-container-size.interface';
-import { PoChartMinMaxValues } from '../interfaces/po-chart-min-max-values.interface';
 import { PoChartAxisOptions } from '../interfaces/po-chart-axis-options.interface';
 
 @Component({
@@ -26,8 +25,6 @@ export class PoChartContainerComponent {
   get containerSize() {
     return this._containerSize;
   }
-
-  @Input('p-min-max-values') minMaxValues: PoChartMinMaxValues;
 
   @Input('p-axis-options') axisOptions?: PoChartAxisOptions;
 

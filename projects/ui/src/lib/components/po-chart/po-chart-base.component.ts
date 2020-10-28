@@ -1,14 +1,12 @@
 import { EventEmitter, Input, Output, Directive } from '@angular/core';
 
 import { convertToInt, isTypeof } from '../../utils/util';
-import { calculateMaxValue } from './helpers/maths';
 
 import { PoChartGaugeSerie } from './po-chart-types/po-chart-gauge/po-chart-gauge-series.interface';
 import { PoChartType } from './enums/po-chart-type.enum';
 import { PoDonutChartSeries } from './po-chart-types/po-chart-donut/po-chart-donut-series.interface';
 import { PoPieChartSeries } from './po-chart-types/po-chart-pie/po-chart-pie-series.interface';
 import { PoLineChartSeries } from './interfaces/po-chart-line-series.interface';
-import { PoChartMinMaxValues } from './interfaces/po-chart-min-max-values.interface';
 import { PoChartAxisOptions } from './interfaces/po-chart-axis-options.interface';
 
 const poChartDefaultHeight = 400;
@@ -39,8 +37,6 @@ export abstract class PoChartBaseComponent {
   private _height: number;
   private _series: Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries> | PoChartGaugeSerie;
   private _type: PoChartType = poChartTypeDefault;
-
-  minMaxValues: PoChartMinMaxValues;
 
   // manipulação das séries tratadas internamente para preservar 'p-series';
   protected chartSeries: PoChartSeries;
@@ -96,12 +92,9 @@ export abstract class PoChartBaseComponent {
   ) {
     this._series = value || [];
 
-    if (Array.isArray(this._series)) {
-      this.minMaxValues = calculateMaxValue(this._series);
-      this.chartSeries = [...this._series];
-    } else {
-      this.chartSeries = this.transformObjectToArrayObject(this._series);
-    }
+    this.chartSeries = Array.isArray(this._series)
+      ? [...this._series]
+      : this.transformObjectToArrayObject(this._series);
   }
 
   get series() {

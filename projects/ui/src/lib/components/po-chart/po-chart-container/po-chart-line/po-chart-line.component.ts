@@ -5,9 +5,10 @@ import {
   PoChartPadding,
   PoChartPlotAreaPaddingTop
 } from '../../helpers/po-chart-default-values.constant';
-import { getSeriePercentage } from '../../helpers/maths';
 
 import { PoChartColorService } from '../../services/po-chart-color.service';
+import { PoMathsService } from '../../services/po-maths.service';
+
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
 import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
 import { PoChartType } from '../../enums/po-chart-type.enum';
@@ -22,8 +23,9 @@ export class PoChartLineComponent {
   seriesPathsCoordinates: Array<{ coordinates: string }>;
   seriesPointsCoordinates: Array<Array<{ serieValue: number; xCoordinate: number; yCoordinate: number }>> = [];
 
+  private minMaxSeriesValues: PoChartMinMaxValues;
+
   private _containerSize: PoChartContainerSize = {};
-  private _minMaxSeriesValues: PoChartMinMaxValues = {};
   private _series: Array<PoLineChartSeries> = [];
 
   @Input('p-container-size') set containerSize(value: PoChartContainerSize) {
@@ -38,17 +40,10 @@ export class PoChartLineComponent {
 
   @Input('p-categories') categories: Array<string> = [];
 
-  @Input('p-min-max-series-values') set minMaxSeriesValues(value: PoChartMinMaxValues) {
-    this._minMaxSeriesValues = value;
-  }
-
-  get minMaxSeriesValues() {
-    return this._minMaxSeriesValues;
-  }
-
   @Input('p-series') set series(value: Array<PoLineChartSeries>) {
     this._series = value;
 
+    this.minMaxSeriesValues = this.mathsService.calculateMinAndMaxValues(this._series);
     this.colors = this.colorService.getSeriesColor(this._series, PoChartType.Line);
     this.seriePathPointsDefinition(this.containerSize, this.categories, this._series, this.minMaxSeriesValues);
   }
@@ -59,7 +54,12 @@ export class PoChartLineComponent {
 
   @ViewChild('chartLine') chartLine: ElementRef;
 
-  constructor(private colorService: PoChartColorService, private renderer: Renderer2, private elementRef: ElementRef) {}
+  constructor(
+    private colorService: PoChartColorService,
+    private mathsService: PoMathsService,
+    private renderer: Renderer2,
+    private elementRef: ElementRef
+  ) {}
 
   trackBy(index) {
     return index;
@@ -87,7 +87,7 @@ export class PoChartLineComponent {
         const xCoordinate = PoChartAxisXLabelArea + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
 
         // eixo Y
-        const yRratio = getSeriePercentage(minMaxSeriesValues, serieValue);
+        const yRratio = this.mathsService.getSeriePercentage(minMaxSeriesValues, serieValue);
         const yCoordinate =
           containerSize.svgPlottingAreaHeight -
           containerSize.svgPlottingAreaHeight * yRratio +
