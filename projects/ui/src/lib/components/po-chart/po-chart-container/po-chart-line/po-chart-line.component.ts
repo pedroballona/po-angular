@@ -21,7 +21,9 @@ import { PoLineChartSeries } from '../../interfaces/po-chart-line-series.interfa
 export class PoChartLineComponent {
   colors: Array<string>;
   seriesPathsCoordinates: Array<{ coordinates: string }>;
-  seriesPointsCoordinates: Array<Array<{ serieValue: number; xCoordinate: number; yCoordinate: number }>> = [];
+  seriesPointsCoordinates: Array<
+    Array<{ serieLabel: string; serieValue: number; xCoordinate: number; yCoordinate: number }>
+  > = [];
 
   private minMaxSeriesValues: PoChartMinMaxValues;
 
@@ -75,7 +77,12 @@ export class PoChartLineComponent {
 
     this.seriesPathsCoordinates = series.map((serie: PoLineChartSeries) => {
       let pathCoordinates: string = '';
-      let pointCoordinates: Array<{ serieValue: number; xCoordinate: number; yCoordinate: number }> = [];
+      let pointCoordinates: Array<{
+        serieLabel: string;
+        serieValue: number;
+        xCoordinate: number;
+        yCoordinate: number;
+      }> = [];
 
       serie.data.forEach((serieValue, index) => {
         const svgPathCommand = index === 0 ? 'M' : 'L';
@@ -93,8 +100,10 @@ export class PoChartLineComponent {
           containerSize.svgPlottingAreaHeight * yRratio +
           PoChartPlotAreaPaddingTop;
 
+        const serieLabel = `${serie['category']}: ${serieValue}`;
+
         // coordenadas do círculo
-        pointCoordinates = [...pointCoordinates, { serieValue, xCoordinate, yCoordinate }];
+        pointCoordinates = [...pointCoordinates, { serieLabel, serieValue, xCoordinate, yCoordinate }];
 
         // coordenadas da linha
         pathCoordinates += ` ${svgPathCommand}${xCoordinate} ${yCoordinate}`;
