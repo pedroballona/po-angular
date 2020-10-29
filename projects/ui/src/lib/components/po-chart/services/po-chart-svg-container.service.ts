@@ -6,7 +6,7 @@ import { PoChartContainerSize } from '../interfaces/po-chart-container-size.inte
 @Injectable({
   providedIn: 'root'
 })
-export class PoSvgContainerService {
+export class PoChartSvgContainerService {
   constructor() {}
 
   /**
@@ -17,7 +17,7 @@ export class PoSvgContainerService {
    * @param chartLegendHeight
    * @param categoriesLength
    */
-  calculatesContainerMeasurements(
+  calculateSVGContainerMeasurements(
     chartHeight: number,
     chartWrapperWidth: number = 0,
     chartHeaderHeight: number = 0,

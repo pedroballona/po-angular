@@ -6,12 +6,11 @@ import {
   PoChartPadding,
   PoChartPlotAreaPaddingTop
 } from '../../helpers/po-chart-default-values.constant';
-import { PoMathsService } from '../../services/po-maths.service';
+import { PoChartMathsService } from '../../services/po-chart-maths.service';
 
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
 import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
 import { PoChartAxisOptions } from '../../interfaces/po-chart-axis-options.interface';
-import { PoChartSeries } from '../../interfaces/po-chart-series.interface';
 
 @Component({
   selector: '[po-chart-axis]',
@@ -30,9 +29,9 @@ export class PoChartAxisComponent {
   private _axisXGridLines: number = PoChartAxisXGridLines;
   private _categories: Array<string> = [];
   private _containerSize: PoChartContainerSize = {};
-  private _series: Array<PoChartSeries> = [];
+  private _series: Array<any> = [];
 
-  @Input('p-series') set series(value: Array<PoChartSeries>) {
+  @Input('p-series') set series(value: Array<any>) {
     this._series = value;
 
     this.minMaxAxisValues = this.mathsService.calculateMinAndMaxValues(this._series);
@@ -87,7 +86,7 @@ export class PoChartAxisComponent {
     return this._containerSize;
   }
 
-  constructor(private mathsService: PoMathsService) {}
+  constructor(private mathsService: PoChartMathsService) {}
 
   private setAxisXPoints(axisXGridLines: number, containerSize: PoChartContainerSize) {
     this.axisXPoints = [...Array(axisXGridLines)].map((_, index: number) => {

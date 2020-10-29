@@ -7,7 +7,6 @@ import {
   DoCheck,
   ElementRef,
   HostListener,
-  IterableDiffers,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -18,7 +17,7 @@ import { Subject } from 'rxjs';
 
 import { PoChartBaseComponent } from './po-chart-base.component';
 import { PoChartColorService } from './services/po-chart-color.service';
-import { PoSvgContainerService } from './services/po-svg-container.service';
+import { PoChartSvgContainerService } from './services/po-chart-svg-container.service';
 import { PoChartDonutComponent } from './po-chart-types/po-chart-donut/po-chart-donut.component';
 import { PoChartDynamicTypeComponent } from './po-chart-types/po-chart-dynamic-type.component';
 import { PoChartGaugeComponent } from './po-chart-types/po-chart-gauge/po-chart-gauge.component';
@@ -53,7 +52,6 @@ import { PoChartContainerSize } from './interfaces/po-chart-container-size.inter
 export class PoChartComponent extends PoChartBaseComponent implements AfterViewInit, DoCheck, OnDestroy, OnInit {
   private calculatedElement: boolean = false;
   private componentRef: ComponentRef<{}>;
-  private differ: any;
   private initialized: boolean = false;
   private windowResizeListener: Subject<any> = new Subject();
 
@@ -77,13 +75,10 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
   constructor(
     public changeDetector: ChangeDetectorRef,
     private colorService: PoChartColorService,
-    private containerService: PoSvgContainerService,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private differs: IterableDiffers
+    private containerService: PoChartSvgContainerService,
+    private componentFactoryResolver: ComponentFactoryResolver
   ) {
     super();
-
-    this.differ = this.differs.find([]).create(null);
   }
 
   get isChartGaugeType(): boolean {
@@ -96,13 +91,12 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
   @HostListener('window:resize')
   onResize = () => {
-    this.windowResizeListener.next();
     this.getContainerSize();
+    this.windowResizeListener.next();
   };
 
   ngAfterViewInit() {
     this.initialized = true;
-
     this.getContainerSize();
   }
 
@@ -111,13 +105,13 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
     // Permite que o chart seja calculado na primeira vez que o componente torna-se visível,
     // evitando com isso, problemas com Tabs ou Divs que iniciem escondidas.
-    if (charWrapperWidth && !this.calculatedElement && this.initialized) {
-      this.calculatedElement = true;
-      this.colors = this.colorService.getSeriesColor(this.chartSeries, this.type);
-      this.dynamicComponentSetting();
+    // Quando modificar a estrutura dos gráficos do tipo circular isto será removido.
+    if (this.getComponentType(this.type)) {
+      if (charWrapperWidth && !this.calculatedElement && this.initialized) {
+        this.calculatedElement = true;
+        this.dynamicComponentSetting();
+      }
     }
-
-    this.checkingForSerieChanges();
   }
 
   ngOnDestroy() {
@@ -125,30 +119,19 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
   }
 
   ngOnInit() {
-    this.colors = this.colorService.getSeriesColor(this.chartSeries, this.type);
     this.getContainerSize();
   }
 
-  rebuildComponent() {
+  rebuildComponentRef() {
     if (this.componentRef) {
       this.componentRef.destroy();
-      this.colors = this.colorService.getSeriesColor(this.chartSeries, this.type);
+
       this.dynamicComponentSetting();
     }
   }
 
   private chartLegendHeight(chartLegend: ElementRef) {
     return chartLegend ? chartLegend.nativeElement.offsetHeight : 0;
-  }
-
-  private checkingForSerieChanges() {
-    if (this.componentRef && this.differ) {
-      const changeSeries = this.differ.diff(this.chartSeries);
-      if (changeSeries) {
-        this.colors = this.colorService.getSeriesColor(this.chartSeries, this.type);
-        this.rebuildComponent();
-      }
-    }
   }
 
   private createComponent() {
@@ -159,51 +142,43 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
     const instance = <PoChartDynamicTypeComponent>this.componentRef.instance;
 
-    this.setChartProperties(instance);
+    this.setComponentRefProperties(instance);
 
     return instance;
   }
 
   private dynamicComponentSetting() {
-    // const instance = this.createComponent();
+    const instance = this.createComponent();
 
-    // this.setResizeListenerSubscribe(instance);
+    this.setResizeListenerSubscribe(instance);
     this.changeDetector.detectChanges();
-    // this.setClickSubscribe(instance);
-    // this.setHoverSubscribe(instance);
+    this.setClickSubscribe(instance);
+    this.setHoverSubscribe(instance);
   }
 
   private getComponentType(typeName) {
     return this.mappings[typeName];
   }
 
-  // private this.colorService.getSeriesColor() {
-  //   const colorsLength = PoChartColors.length - 1;
+  private getContainerSize() {
+    const { chartHeaderHeight, chartLegendHeight, chartWrapperWidth } = this.getChartMeasurements();
 
-  //   if (!this.chartSeries) {
-  //     return (this.colors = PoChartColors[colorsLength]);
-  //   }
-  //   if (this.type === PoChartType.Gauge) {
-  //     return (this.colors = PoChartColors[0]);
-  //   }
+    this.containerSize = this.containerService.calculateSVGContainerMeasurements(
+      this.height,
+      chartWrapperWidth,
+      chartHeaderHeight,
+      chartLegendHeight,
+      this.categories?.length
+    );
+  }
 
-  //   const seriesLength = this.chartSeries.length - 1;
+  private getChartMeasurements() {
+    const chartWrapperWidth = this.chartWrapper.nativeElement.offsetWidth;
+    const chartHeaderHeight = this.chartHeader?.nativeElement.offsetHeight;
+    const chartLegendHeight = this.chartLegendHeight(this.chartLegend);
 
-  //   if (seriesLength > colorsLength) {
-  //     let colors = PoChartColors[colorsLength];
-
-  //     // recupera o resultado da divisao entre tamanho das series e o numero de cores disponiveis
-  //     const quantityDuplicates = seriesLength / colorsLength;
-
-  //     for (let i = 1; i <= quantityDuplicates; i++) {
-  //       colors = colors.concat(PoChartColors[colorsLength]);
-  //     }
-
-  //     return (this.colors = colors);
-  //   }
-
-  //   return (this.colors = PoChartColors[seriesLength]);
-  // }
+    return { chartWrapperWidth, chartHeaderHeight, chartLegendHeight };
+  }
 
   private removeWindowResizeListener() {
     if (this.onResize) {
@@ -211,10 +186,14 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     }
   }
 
-  private setChartProperties(instance: PoChartDynamicTypeComponent) {
-    instance.chartHeader = this.chartHeader.nativeElement.offsetHeight;
-    instance.chartLegend = this.chartLegendHeight(this.chartLegend);
-    instance.chartWrapper = this.chartWrapper.nativeElement.offsetWidth;
+  private setComponentRefProperties(instance: PoChartDynamicTypeComponent) {
+    const { chartHeaderHeight, chartLegendHeight, chartWrapperWidth } = this.getChartMeasurements();
+
+    this.colors = this.colorService.getSeriesColor(this.chartSeries, this.type);
+
+    instance.chartHeader = chartHeaderHeight;
+    instance.chartLegend = chartLegendHeight;
+    instance.chartWrapper = chartWrapperWidth;
     instance.colors = Array.isArray(this.colors) ? [...this.colors] : [];
     instance.height = this.height;
     instance.type = this.type;
@@ -235,35 +214,11 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
   private setResizeListenerSubscribe(instance: PoChartDynamicTypeComponent) {
     this.windowResizeListener.subscribe(() => {
-      instance.chartWrapper = this.chartWrapper.nativeElement.offsetWidth;
-      instance.chartHeader = this.chartHeader.nativeElement.offsetHeight;
-      instance.chartLegend = this.chartLegendHeight(this.chartLegend);
+      const measuresForComponentRef = this.getChartMeasurements();
 
-      const chartWrapperWidth = this.chartWrapper.nativeElement.offsetWidth;
-      const chartHeaderHeight = this.chartHeader?.nativeElement.offsetHeight;
-      const chartLegendHeight = this.chartLegend?.nativeElement.offsetHeight;
-
-      this.containerSize = this.containerService.calculatesContainerMeasurements(
-        this.height,
-        chartWrapperWidth,
-        chartHeaderHeight,
-        chartLegendHeight,
-        this.categories?.length
-      );
+      instance.chartWrapper = measuresForComponentRef.chartWrapperWidth;
+      instance.chartHeader = measuresForComponentRef.chartHeaderHeight;
+      instance.chartLegend = measuresForComponentRef.chartLegendHeight;
     });
-  }
-
-  getContainerSize() {
-    const chartWrapperWidth = this.chartWrapper.nativeElement.offsetWidth;
-    const chartHeaderHeight = this.chartHeader?.nativeElement.offsetHeight;
-    const chartLegendHeight = this.chartLegend?.nativeElement.offsetHeight;
-
-    this.containerSize = this.containerService.calculatesContainerMeasurements(
-      this.height,
-      chartWrapperWidth,
-      chartHeaderHeight,
-      chartLegendHeight,
-      this.categories?.length
-    );
   }
 }

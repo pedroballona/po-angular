@@ -70,7 +70,7 @@ export abstract class PoChartBaseComponent {
 
     this._height = height;
 
-    this.rebuildComponent();
+    this.rebuildComponentRef();
   }
 
   get height(): number {
@@ -94,7 +94,9 @@ export abstract class PoChartBaseComponent {
 
     this.chartSeries = Array.isArray(this._series)
       ? [...this._series]
-      : this.transformObjectToArrayObject(this._series);
+      : this.transformObjectToArrayObject(this._series as PoChartGaugeSerie);
+
+    this.rebuildComponentRef();
   }
 
   get series() {
@@ -121,7 +123,7 @@ export abstract class PoChartBaseComponent {
   @Input('p-type') set type(value: PoChartType) {
     this._type = (<any>Object).values(PoChartType).includes(value) ? value : poChartTypeDefault;
 
-    this.rebuildComponent();
+    this.rebuildComponentRef();
   }
 
   get type(): PoChartType {
@@ -176,5 +178,6 @@ export abstract class PoChartBaseComponent {
     return typeof serie === 'object' && Object.keys(serie).length ? [{ ...serie }] : [];
   }
 
-  abstract rebuildComponent(): void;
+  // válido para gráficos do tipo circular e que será refatorado.
+  abstract rebuildComponentRef(): void;
 }

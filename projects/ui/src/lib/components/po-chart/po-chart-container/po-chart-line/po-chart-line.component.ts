@@ -7,7 +7,7 @@ import {
 } from '../../helpers/po-chart-default-values.constant';
 
 import { PoChartColorService } from '../../services/po-chart-color.service';
-import { PoMathsService } from '../../services/po-maths.service';
+import { PoChartMathsService } from '../../services/po-chart-maths.service';
 
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
 import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
@@ -58,7 +58,7 @@ export class PoChartLineComponent {
 
   constructor(
     private colorService: PoChartColorService,
-    private mathsService: PoMathsService,
+    private mathsService: PoChartMathsService,
     private renderer: Renderer2,
     private elementRef: ElementRef
   ) {}

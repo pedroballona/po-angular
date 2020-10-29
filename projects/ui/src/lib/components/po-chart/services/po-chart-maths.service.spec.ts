@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PoMathsService } from './po-chart-color.service';
+import { PoChartMathsService } from './po-chart-maths.service';
 
-describe('PoMathsService', () => {
-  let service: PoMathsService;
+describe('PoChartMathsService', () => {
+  let service: PoChartMathsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(PoMathsService);
+    service = TestBed.inject(PoChartMathsService);
   });
 
   it('should be created', () => {

@@ -5,7 +5,7 @@ import { PoChartMinMaxValues } from '../interfaces/po-chart-min-max-values.inter
 @Injectable({
   providedIn: 'root'
 })
-export class PoMathsService {
+export class PoChartMathsService {
   constructor() {}
 
   // retorna min e max values
