@@ -42,9 +42,10 @@ export class PoChartAxisComponent {
   }
 
   @Input('p-axis-options') set axisOptions(value: PoChartAxisOptions) {
-    this._axisOptions = value;
-
-    this.checkAxisOptions(this.minMaxAxisValues, this._axisOptions);
+    if (value instanceof Object && !(value instanceof Array)) {
+      this._axisOptions = value;
+      this.checkAxisOptions(this.minMaxAxisValues, this._axisOptions);
+    }
   }
 
   get axisOptions() {

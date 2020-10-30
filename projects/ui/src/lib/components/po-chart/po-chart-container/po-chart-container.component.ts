@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { PoChartType } from '../enums/po-chart-type.enum';
 import { PoLineChartSeries } from '../interfaces/po-chart-line-series.interface';
 import { PoChartContainerSize } from '../interfaces/po-chart-container-size.interface';
-import { PoChartAxisOptions } from '../interfaces/po-chart-axis-options.interface';
+import { PoChartOptions } from '../interfaces/po-chart-options.interface';
 
 @Component({
   selector: 'po-chart-container',
@@ -26,7 +26,7 @@ export class PoChartContainerComponent {
     return this._containerSize;
   }
 
-  @Input('p-axis-options') axisOptions?: PoChartAxisOptions;
+  @Input('p-options') options?: PoChartOptions;
 
   @Input('p-type') type: PoChartType;
 

@@ -7,7 +7,7 @@ import { PoChartType } from './enums/po-chart-type.enum';
 import { PoDonutChartSeries } from './po-chart-types/po-chart-donut/po-chart-donut-series.interface';
 import { PoPieChartSeries } from './po-chart-types/po-chart-pie/po-chart-pie-series.interface';
 import { PoLineChartSeries } from './interfaces/po-chart-line-series.interface';
-import { PoChartAxisOptions } from './interfaces/po-chart-axis-options.interface';
+import { PoChartOptions } from './interfaces/po-chart-options.interface';
 
 const poChartDefaultHeight = 400;
 const poChartMinHeight = 200;
@@ -33,7 +33,7 @@ export type PoChartSeries = Array<PoDonutChartSeries | PoPieChartSeries | PoChar
  */
 @Directive()
 export abstract class PoChartBaseComponent {
-  private _axisOptions: PoChartAxisOptions;
+  private _options: PoChartOptions;
   private _height: number;
   private _series: Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries> | PoChartGaugeSerie;
   private _type: PoChartType = poChartTypeDefault;
@@ -130,12 +130,32 @@ export abstract class PoChartBaseComponent {
     return this._type;
   }
 
-  @Input('p-axis-options') set axisOptions(value: PoChartAxisOptions) {
-    this._axisOptions = value;
+  /**
+   * @optional
+   *
+   * @description
+   *
+   * Objeto com as configurações usadas no `po-chart`.
+   *
+   * É possível definir as configurações dos eixos(*axis*) do gráfico do tipo `Line` da seguinte forma:
+   *
+   * ```
+   *  const chartOptions: PoChartOptions = {
+   *    axis: {
+   *      minRange: 0,
+   *      maxRange: 100,
+   *      axisXGridLines: 5,
+   *    },
+   *  };
+   */
+  @Input('p-options') set options(value: PoChartOptions) {
+    if (value instanceof Object && !(value instanceof Array)) {
+      this._options = value;
+    }
   }
 
-  get axisOptions() {
-    return this._axisOptions;
+  get options() {
+    return this._options;
   }
 
   /**
