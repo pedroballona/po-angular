@@ -51,6 +51,7 @@ import { PoChartContainerSize } from './interfaces/po-chart-container-size.inter
 })
 export class PoChartComponent extends PoChartBaseComponent implements AfterViewInit, DoCheck, OnDestroy, OnInit {
   private calculatedElement: boolean = false;
+  private colors: Array<string> = [];
   private componentRef: ComponentRef<{}>;
   private initialized: boolean = false;
   private windowResizeListener: Subject<any> = new Subject();
@@ -61,8 +62,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     [PoChartType.Pie]: PoChartPieComponent
   };
 
-  containerSize: PoChartContainerSize;
-  colors: Array<string> = [];
+  svgContainerSize: PoChartContainerSize;
 
   @ViewChild('chartContainer', { read: ViewContainerRef, static: true }) chartContainer: ViewContainerRef;
 
@@ -91,13 +91,13 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
   @HostListener('window:resize')
   onResize = () => {
-    this.getContainerSize();
+    this.getSvgContainerSize();
     this.windowResizeListener.next();
   };
 
   ngAfterViewInit() {
     this.initialized = true;
-    this.getContainerSize();
+    this.getSvgContainerSize();
   }
 
   ngDoCheck() {
@@ -106,7 +106,9 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     // Permite que o chart seja calculado na primeira vez que o componente torna-se visível,
     // evitando com isso, problemas com Tabs ou Divs que iniciem escondidas.
     // Quando modificar a estrutura dos gráficos do tipo circular isto será removido.
-    if (this.getComponentType(this.type)) {
+    const isDynamicChart = this.getComponentType(this.type);
+
+    if (isDynamicChart) {
       if (charWrapperWidth && !this.calculatedElement && this.initialized) {
         this.calculatedElement = true;
         this.dynamicComponentSetting();
@@ -119,7 +121,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
   }
 
   ngOnInit() {
-    this.getContainerSize();
+    this.getSvgContainerSize();
   }
 
   rebuildComponentRef() {
@@ -160,10 +162,10 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
     return this.mappings[typeName];
   }
 
-  private getContainerSize() {
+  private getSvgContainerSize() {
     const { chartHeaderHeight, chartLegendHeight, chartWrapperWidth } = this.getChartMeasurements();
 
-    this.containerSize = this.containerService.calculateSVGContainerMeasurements(
+    this.svgContainerSize = this.containerService.calculateSVGContainerMeasurements(
       this.height,
       chartWrapperWidth,
       chartHeaderHeight,
@@ -174,7 +176,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
   private getChartMeasurements() {
     const chartWrapperWidth = this.chartWrapper.nativeElement.offsetWidth;
-    const chartHeaderHeight = this.chartHeader?.nativeElement.offsetHeight;
+    const chartHeaderHeight = this.chartHeader.nativeElement.offsetHeight;
     const chartLegendHeight = this.chartLegendHeight(this.chartLegend);
 
     return { chartWrapperWidth, chartHeaderHeight, chartLegendHeight };

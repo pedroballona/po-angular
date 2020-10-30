@@ -10,7 +10,7 @@ class PoCharComponent extends PoChartBaseComponent {
   rebuildComponentRef() {}
 }
 
-fdescribe('PoChartBaseComponent:', () => {
+describe('PoChartBaseComponent:', () => {
   let component: PoCharComponent;
 
   beforeEach(() => {
@@ -91,6 +91,18 @@ fdescribe('PoChartBaseComponent:', () => {
       component.series = { value: 1, description: 'value' };
 
       expect(component['transformObjectToArrayObject']).toHaveBeenCalledWith(component.series);
+    });
+
+    it('p-options: should update property with valid values', () => {
+      const validValue = [{}, { axis: { minRange: 0 } }];
+
+      expectPropertiesValues(component, 'options', validValue, validValue);
+    });
+
+    it('p-options: shouldn`t update property if receives invalid values', () => {
+      const invalidValues = [undefined, null, '', false, 0, ['1'], [{ key: 'value' }]];
+
+      expectPropertiesValues(component, 'options', invalidValues, undefined);
     });
   });
 

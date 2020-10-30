@@ -85,6 +85,7 @@ export abstract class PoChartBaseComponent {
    * > A coleção de objetos deve implementar alguma das interfaces abaixo:
    * - `PoDonutChartSeries`
    * - `PoPieChartSeries`
+   * - `PoLineChartSeries`
    * - `PoChartGaugeSerie`
    */
   @Input('p-series') set series(

@@ -3,7 +3,6 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { of } from 'rxjs';
 
 import { PoChartBaseComponent } from './po-chart-base.component';
-import { PoChartColors } from './helpers/po-chart-colors.constant';
 import { PoChartComponent } from './po-chart.component';
 import { PoChartModule } from './po-chart.module';
 import { PoChartPieComponent } from './po-chart-types/po-chart-pie/po-chart-pie.component';
@@ -48,6 +47,18 @@ describe('PoChartComponent:', () => {
 
       expect(component.isChartGaugeType).toBeFalsy();
     });
+
+    it('isChartLineType: should return `true` if type is equal `PoChartType.Line`', () => {
+      component.type = PoChartType.Line;
+
+      expect(component.isChartLineType).toBeTruthy();
+    });
+
+    it('isChartLineType: should return `false` if type is diferent from `PoChartType.Line`', () => {
+      component.type = PoChartType.Pie;
+
+      expect(component.isChartLineType).toBeFalsy();
+    });
   });
 
   describe('Methods:', () => {
@@ -59,159 +70,101 @@ describe('PoChartComponent:', () => {
       expect(component['removeWindowResizeListener']).toHaveBeenCalled();
     });
 
-    it('ngOnInit: should call `getSeriesColor`', () => {
-      spyOn(component, <any>'getSeriesColor');
+    it('ngOnInit: should call `getSvgContainerSize`', () => {
+      spyOn(component, <any>'getSvgContainerSize');
 
       component.ngOnInit();
 
-      expect(component['getSeriesColor']).toHaveBeenCalled();
+      expect(component['getSvgContainerSize']).toHaveBeenCalled();
     });
 
-    it('ngDoCheck: should call `getSeriesColor` and `dynamicComponentSetting` in first loading and if chartWrapper has width', () => {
-      Object.defineProperty(component.chartWrapper.nativeElement, 'offsetWidth', {
-        writable: true,
-        value: 500
+    describe('NgDoCheck: ', () => {
+      it('should call `dynamicComponentSetting` on first loading and if chartWrapper has width', () => {
+        Object.defineProperty(component.chartWrapper.nativeElement, 'offsetWidth', {
+          writable: true,
+          value: 500
+        });
+
+        spyOn(component, <any>'dynamicComponentSetting');
+
+        component.ngDoCheck();
+
+        expect(component['calculatedElement']).toBeTruthy();
+        expect(component['dynamicComponentSetting']).toHaveBeenCalled();
       });
 
-      spyOn(component, <any>'getSeriesColor');
-      spyOn(component, <any>'dynamicComponentSetting');
+      it('shouldn`t call `dynamicComponentSetting` if `calculatedElement` is true', () => {
+        Object.defineProperty(component.chartWrapper.nativeElement, 'offsetWidth', {
+          writable: true,
+          value: 500
+        });
 
-      component.ngDoCheck();
+        component['calculatedElement'] = true;
 
-      expect(component['getSeriesColor']).toHaveBeenCalled();
-      expect(component['dynamicComponentSetting']).toHaveBeenCalled();
-    });
+        spyOn(component, <any>'dynamicComponentSetting');
 
-    it('ngDoCheck: shouldn`t call `getSeriesColor`and `dynamicComponentSetting` if chartWrapper width has already been calculated', () => {
-      Object.defineProperty(component.chartWrapper.nativeElement, 'offsetWidth', {
-        writable: true,
-        value: 500
+        component.ngDoCheck();
+
+        expect(component['dynamicComponentSetting']).not.toHaveBeenCalled();
       });
 
-      component['calculatedElement'] = true;
+      it('shouldn`t call `dynamicComponentSetting` if chartWrapper width is 0', () => {
+        component['calculatedElement'] = false;
+        Object.defineProperty(component.chartWrapper.nativeElement, 'offsetWidth', {
+          writable: true,
+          value: 0
+        });
 
-      spyOn(component, <any>'getSeriesColor');
-      spyOn(component, <any>'dynamicComponentSetting');
+        spyOn(component, <any>'dynamicComponentSetting');
 
-      component.ngDoCheck();
+        component.ngDoCheck();
 
-      expect(component['getSeriesColor']).not.toHaveBeenCalled();
-      expect(component['dynamicComponentSetting']).not.toHaveBeenCalled();
-    });
-
-    it('ngDoCheck: shouldn`t call `getSeriesColor`and `dynamicComponentSetting` if chartWrapper width is 0', () => {
-      Object.defineProperty(component.chartWrapper.nativeElement, 'offsetWidth', {
-        writable: true,
-        value: 0
+        expect(component['dynamicComponentSetting']).not.toHaveBeenCalled();
       });
 
-      component['calculatedElement'] = false;
+      it('shouldn`t call `dynamicComponentSetting` if `getComponentType` returns false', () => {
+        component.type = PoChartType.Line;
 
-      spyOn(component, <any>'getSeriesColor');
-      spyOn(component, <any>'dynamicComponentSetting');
+        spyOn(component, <any>'dynamicComponentSetting');
 
-      component.ngDoCheck();
+        component.ngDoCheck();
 
-      expect(component['getSeriesColor']).not.toHaveBeenCalled();
-      expect(component['dynamicComponentSetting']).not.toHaveBeenCalled();
-    });
-
-    it('ngDoCheck: should call `checkingForSerieChanges`', () => {
-      spyOn(component, <any>'checkingForSerieChanges');
-
-      component.ngDoCheck();
-
-      expect(component['checkingForSerieChanges']).toHaveBeenCalled();
+        expect(component['calculatedElement']).toBeFalsy();
+        expect(component['dynamicComponentSetting']).not.toHaveBeenCalled();
+      });
     });
 
     it(`createComponent: should call 'getComponentType', 'resolveComponentFactory', 'chartContainer.createComponent'
-      and 'setChartProperties' `, () => {
+      and 'setComponentRefProperties' `, () => {
       const componentRef: any = { instance: {} };
 
       spyOn(component, <any>'getComponentType').and.returnValue(PoChartType.Pie);
       spyOn(component['componentFactoryResolver'], 'resolveComponentFactory');
       spyOn(component.chartContainer, 'createComponent').and.returnValue(componentRef);
-      spyOn(component, <any>'setChartProperties');
+      spyOn(component, <any>'setComponentRefProperties');
 
       component['createComponent']();
 
       expect(component['getComponentType']).toHaveBeenCalled();
       expect(component['componentFactoryResolver'].resolveComponentFactory).toHaveBeenCalled();
       expect(component.chartContainer.createComponent).toHaveBeenCalled();
-      expect(component['setChartProperties']).toHaveBeenCalled();
+      expect(component['setComponentRefProperties']).toHaveBeenCalled();
     });
 
-    it('rebuildComponent: should call `dynamicComponentSetting`, `getSeriesColor` and destroy method from componentRef', () => {
+    it('rebuildComponentRef: should call `dynamicComponentSetting` and `componentRef.destroy`', () => {
       const sourceObject = { componentRef: { destroy: () => {} } };
       Object.assign(component, sourceObject);
 
       spyOn(sourceObject.componentRef, 'destroy');
       spyOn(component, <any>'dynamicComponentSetting');
-      spyOn(component, <any>'getSeriesColor');
 
-      component['rebuildComponent']();
+      component['rebuildComponentRef']();
 
       expect(sourceObject.componentRef.destroy).toHaveBeenCalled();
       expect(component['dynamicComponentSetting']).toHaveBeenCalled();
-      expect(component['getSeriesColor']).toHaveBeenCalled();
     });
 
-    it('checkingForSerieChanges: should call `getSeriesColor` and `rebuildComponent` if has differ and changes', () => {
-      const fakeThis = {
-        differ: {
-          diff: (opt: any) => true
-        },
-        componentRef: { instance: 'instance' },
-        getSeriesColor: () => {},
-        rebuildComponent: () => {}
-      };
-
-      spyOn(fakeThis, <any>'getSeriesColor');
-      spyOn(fakeThis, <any>'rebuildComponent');
-
-      component['checkingForSerieChanges'].call(fakeThis);
-
-      expect(fakeThis['getSeriesColor']).toHaveBeenCalled();
-      expect(fakeThis['rebuildComponent']).toHaveBeenCalled();
-    });
-
-    it('checkingForSerieChanges: shouldn`t call `getSeriesColor` and `rebuildComponent` if doesn`t have differ', () => {
-      const fakeThis = {
-        differ: undefined,
-        componentRef: { instance: 'instance' },
-        getSeriesColor: () => {},
-        rebuildComponent: () => {}
-      };
-
-      spyOn(fakeThis, <any>'getSeriesColor');
-      spyOn(fakeThis, <any>'rebuildComponent');
-
-      component['checkingForSerieChanges'].call(fakeThis);
-
-      expect(fakeThis['getSeriesColor']).not.toHaveBeenCalled();
-      expect(fakeThis['rebuildComponent']).not.toHaveBeenCalled();
-    });
-
-    it('checkingForSerieChanges: shouldn`t call `getSeriesColor` and `rebuildComponent` if series not changes', () => {
-      const fakeThis = {
-        differ: {
-          diff: (opt: any) => false
-        },
-        componentRef: { instance: 'instance' },
-        getSeriesColor: () => {},
-        rebuildComponent: () => {}
-      };
-
-      spyOn(fakeThis, <any>'getSeriesColor');
-      spyOn(fakeThis, <any>'rebuildComponent');
-
-      component['checkingForSerieChanges'].call(fakeThis);
-
-      expect(fakeThis['getSeriesColor']).not.toHaveBeenCalled();
-      expect(fakeThis['rebuildComponent']).not.toHaveBeenCalled();
-    });
-
-    it('setChartProperties: should attribute some PoChartDynamicTypeComponent property values', () => {
+    it('setComponentRefProperties: should apply PoChartDynamicTypeComponent property values', () => {
       const instance: any = {
         chartHeader: { nativeElement: { offsetHeight: 200 } },
         chartLegend: { nativeElement: { offsetHeight: 200 } },
@@ -225,27 +178,31 @@ describe('PoChartComponent:', () => {
       ];
       component['colors'] = ['orange', 'red'];
 
-      component['setChartProperties'](instance);
+      component['setComponentRefProperties'](instance);
 
       expect(instance.height).toBe(component.height);
+      expect(instance.type).toBe(component.type);
       expect(instance.series).toEqual(component['series']);
       expect(instance.colors).toEqual(component['colors']);
       expect(instance.chartHeader).toBe(component.chartHeader.nativeElement.offsetHeight);
-      expect(instance.chartLegend).toBe(component['chartLegend'].nativeElement.offsetHeight);
+      expect(instance.chartLegend).toBe(component.chartLegend.nativeElement.offsetHeight);
       expect(instance.chartWrapper).toBe(component.chartWrapper.nativeElement.offsetWidth);
     });
 
-    it('setChartProperties: should set `instance.colors` with empty array if `component.colors` is undefined', () => {
+    it('setComponentRefProperties: should set `instance.colors` and `instance.series` with empty array if `colors` and `series` are undefined', () => {
       const instance: any = {};
 
-      component['colors'] = undefined;
+      spyOn(component['colorService'], 'getSeriesColor').and.returnValue(undefined);
+
+      component['chartSeries'] = undefined;
       component.chartHeader = { nativeElement: { offsetHeight: 200 } };
       component.chartLegend = { nativeElement: { offsetHeight: 200 } };
       component.chartWrapper = { nativeElement: { offsetWidth: 200 } };
 
-      component['setChartProperties'](instance);
+      component['setComponentRefProperties'](instance);
 
       expect(instance.colors).toEqual([]);
+      expect(instance.series).toEqual([]);
     });
 
     it('setClickSubscribe: should call `onSeriesClick` if onSerieClick emits an event', () => {
@@ -276,22 +233,22 @@ describe('PoChartComponent:', () => {
       expect(component.onSeriesHover).toHaveBeenCalledWith(event);
     });
 
-    it('setResizeListenerSubscribe: should call `windowResizeListener` and `chartLegendHeight` if windowResizeListener emits', () => {
+    it('setResizeListenerSubscribe: should call `getChartMeasurements` if windowResizeListener emits and apply instance property values', () => {
       const instance: any = {};
 
       component.chartHeader = { nativeElement: { offsetHeight: 200 } };
-      component['chartLegend'] = { nativeElement: { offsetHeight: 200 } };
+      component.chartLegend = { nativeElement: { offsetHeight: 200 } };
       component.chartWrapper = { nativeElement: { offsetWidth: 200 } };
 
       component['windowResizeListener'] = <any>of([]);
 
-      spyOn(component, <any>'chartLegendHeight').and.callThrough();
+      spyOn(component, <any>'getChartMeasurements').and.callThrough();
 
       component['setResizeListenerSubscribe'](instance);
 
-      expect(component['chartLegendHeight']).toHaveBeenCalledWith(component['chartLegend']);
+      expect(component['getChartMeasurements']).toHaveBeenCalled();
       expect(instance.chartHeader).toBe(component.chartHeader.nativeElement.offsetHeight);
-      expect(instance.chartLegend).toBe(component['chartLegend'].nativeElement.offsetHeight);
+      expect(instance.chartLegend).toBe(component.chartLegend.nativeElement.offsetHeight);
       expect(instance.chartWrapper).toBe(component.chartWrapper.nativeElement.offsetWidth);
     });
 
@@ -318,38 +275,6 @@ describe('PoChartComponent:', () => {
       expect(component['getComponentType'](type)).toBe(PoChartPieComponent);
     });
 
-    it('getSeriesColor: should return all colors if `series` is undefined', () => {
-      const poChartColorsAll = PoChartColors.length - 1;
-
-      expect(component['getSeriesColor']()).toEqual(PoChartColors[poChartColorsAll]);
-    });
-
-    it('getSeriesColor: should return first color if type is `gauge`', () => {
-      component.type = PoChartType.Gauge;
-      component.series = Array(14);
-
-      expect(component['getSeriesColor']()).toEqual(PoChartColors[0]);
-    });
-
-    it('getSeriesColor: should return four colors if `series` legth is four', () => {
-      component.series = Array(4);
-
-      expect(component['getSeriesColor']()).toEqual(PoChartColors[3]);
-    });
-
-    it('getSeriesColor: should return all colors if `series` legth is 11', () => {
-      const poChartColorsAll = PoChartColors.length - 1;
-      component.series = Array(12);
-
-      expect(component['getSeriesColor']()).toEqual(PoChartColors[poChartColorsAll]);
-    });
-
-    it('getSeriesColor: should return duplicate colors if `series` legth is greater 12', () => {
-      component.series = Array(14);
-
-      expect(component['getSeriesColor']().length).toEqual(24);
-    });
-
     it('onResize: should trigger onResize method when window is resized ', () => {
       const spyOnResize = spyOn(component, 'onResize');
 
@@ -358,12 +283,14 @@ describe('PoChartComponent:', () => {
       expect(spyOnResize).toHaveBeenCalled();
     });
 
-    it('onResize: should call `windowResizeListener.next` if window is resized', () => {
-      spyOn(component['windowResizeListener'], 'next');
+    it('onResize: should call `windowResizeListener.next` and `getSvgContainerSize` if window is resized', () => {
+      const spyWindowResizeListener = spyOn(component['windowResizeListener'], 'next');
+      const spygetSvgContainerSize = spyOn(component, <any>'getSvgContainerSize');
 
       component.onResize();
 
-      expect(component['windowResizeListener'].next).toHaveBeenCalled();
+      expect(spyWindowResizeListener).toHaveBeenCalled();
+      expect(spygetSvgContainerSize).toHaveBeenCalled();
     });
 
     describe('removeWindowResizeListener:', () => {
@@ -384,20 +311,42 @@ describe('PoChartComponent:', () => {
     });
 
     it('chartLegendHeight: should return `chartLegend.nativeElement.offsetHeight` if `chartLegend` has value', () => {
-      component['chartLegend'] = { nativeElement: { offsetHeight: 200 } };
+      component.chartLegend = { nativeElement: { offsetHeight: 200 } };
 
-      const expectedResult = component['chartLegendHeight'](component['chartLegend']);
+      const expectedResult = component['chartLegendHeight'](component.chartLegend);
 
-      expect(expectedResult).toBe(component['chartLegend'].nativeElement.offsetHeight);
+      expect(expectedResult).toBe(component.chartLegend.nativeElement.offsetHeight);
     });
 
     it('chartLegendHeight: should return `0` if `chartLegend` is undefined', () => {
-      component['chartLegend'] = undefined;
+      component.chartLegend = undefined;
 
-      const expectedResult = component['chartLegendHeight'](component['chartLegend']);
+      const expectedResult = component['chartLegendHeight'](component.chartLegend);
 
       expect(expectedResult).toBe(0);
     });
+  });
+
+  it('getSvgContainerSize: should call `containerService.calculateSVGContainerMeasurements` and `getChartMeasurements`', () => {
+    component.categories = ['cat1', 'cat2'];
+    const chartMeasurements = { chartHeaderHeight: 100, chartLegendHeight: 200, chartWrapperWidth: 300 };
+
+    const spyCalculateSVGContainerMeasurements = spyOn(
+      component['containerService'],
+      'calculateSVGContainerMeasurements'
+    );
+    const spyGetChartMeasurements = spyOn(component, <any>'getChartMeasurements').and.returnValue(chartMeasurements);
+
+    component['getSvgContainerSize']();
+
+    expect(spyCalculateSVGContainerMeasurements).toHaveBeenCalledWith(
+      component.height,
+      chartMeasurements.chartWrapperWidth,
+      chartMeasurements.chartHeaderHeight,
+      chartMeasurements.chartLegendHeight,
+      component.categories.length
+    );
+    expect(spyGetChartMeasurements).toHaveBeenCalled();
   });
 
   describe('Templates:', () => {
