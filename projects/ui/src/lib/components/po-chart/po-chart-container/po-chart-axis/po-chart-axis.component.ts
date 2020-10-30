@@ -35,21 +35,11 @@ export class PoChartAxisComponent {
     this._series = value;
 
     this.minMaxAxisValues = this.mathsService.calculateMinAndMaxValues(this._series);
+    this.checkAxisOptions(this.minMaxAxisValues, this.axisOptions);
   }
 
   get series() {
     return this._series;
-  }
-
-  @Input('p-axis-options') set axisOptions(value: PoChartAxisOptions) {
-    if (value instanceof Object && !(value instanceof Array)) {
-      this._axisOptions = value;
-      this.checkAxisOptions(this.minMaxAxisValues, this._axisOptions);
-    }
-  }
-
-  get axisOptions() {
-    return this._axisOptions;
   }
 
   @Input('p-axis-x-grid-lines') set axisXGridLines(value: number) {
@@ -85,6 +75,19 @@ export class PoChartAxisComponent {
 
   get containerSize() {
     return this._containerSize;
+  }
+
+  @Input('p-options') set axisOptions(value: PoChartAxisOptions) {
+    if (value instanceof Object && !(value instanceof Array)) {
+      this._axisOptions = value;
+
+      this.checkAxisOptions(this.minMaxAxisValues, this._axisOptions);
+      this.setAxisXLabelPoints(this.axisXGridLines, this.containerSize, this.minMaxAxisValues, this.digitsPrecision);
+    }
+  }
+
+  get axisOptions() {
+    return this._axisOptions;
   }
 
   constructor(private mathsService: PoChartMathsService) {}
@@ -195,20 +198,11 @@ export class PoChartAxisComponent {
   private checkAxisOptions(minMaxAxisValues: PoChartMinMaxValues, axisOptions: PoChartAxisOptions = {}): void {
     const { minRange, maxRange, axisXGridLines } = axisOptions;
 
+    minMaxAxisValues.minValue = minRange < minMaxAxisValues.minValue ? minRange : minMaxAxisValues.minValue;
+    minMaxAxisValues.maxValue = maxRange > minMaxAxisValues.maxValue ? maxRange : minMaxAxisValues.maxValue;
+
     this.axisXGridLines =
       axisXGridLines && this.isValidGridLinesLengthOption(axisXGridLines) ? axisXGridLines : PoChartAxisXGridLines;
-
-    if (minRange < minMaxAxisValues.minValue) {
-      minMaxAxisValues.minValue = axisOptions.minRange;
-
-      this.setAxisXLabelPoints(this.axisXGridLines, this.containerSize, minMaxAxisValues, this.digitsPrecision);
-    }
-
-    if (maxRange > minMaxAxisValues.maxValue) {
-      minMaxAxisValues.maxValue = axisOptions.maxRange;
-
-      this.setAxisXLabelPoints(this.axisXGridLines, this.containerSize, minMaxAxisValues, this.digitsPrecision);
-    }
   }
 
   private isValidGridLinesLengthOption(axisXGridLines: number): boolean {

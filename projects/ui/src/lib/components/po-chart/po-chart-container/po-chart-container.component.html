@@ -11,10 +11,16 @@
     po-chart-axis
     [p-series]="series"
     [p-container-size]="containerSize"
-    [p-axis-options]="options?.axis"
+    [p-options]="options?.axis"
     [p-categories]="categories"
   ></svg:g>
 
   <!-- chart line -->
-  <svg:g po-chart-line [p-series]="series" [p-categories]="categories" [p-container-size]="containerSize"></svg:g>
+  <svg:g
+    po-chart-line
+    [p-series]="series"
+    [p-options]="options?.axis"
+    [p-categories]="categories"
+    [p-container-size]="containerSize"
+  ></svg:g>
 </svg:svg>

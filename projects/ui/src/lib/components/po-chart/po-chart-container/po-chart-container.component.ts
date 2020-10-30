@@ -10,7 +10,7 @@ import { PoChartOptions } from '../interfaces/po-chart-options.interface';
   templateUrl: './po-chart-container.component.html'
 })
 export class PoChartContainerComponent {
-  viewBox;
+  viewBox: string;
 
   private _series: Array<PoLineChartSeries>;
   private _containerSize: PoChartContainerSize;

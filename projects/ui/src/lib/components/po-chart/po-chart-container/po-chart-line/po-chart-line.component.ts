@@ -9,6 +9,7 @@ import {
 import { PoChartColorService } from '../../services/po-chart-color.service';
 import { PoChartMathsService } from '../../services/po-chart-maths.service';
 
+import { PoChartAxisOptions } from '../../interfaces/po-chart-axis-options.interface';
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
 import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
 import { PoChartType } from '../../enums/po-chart-type.enum';
@@ -28,11 +29,13 @@ export class PoChartLineComponent {
   private minMaxSeriesValues: PoChartMinMaxValues;
 
   private _containerSize: PoChartContainerSize = {};
+  private _options: PoChartAxisOptions;
   private _series: Array<PoLineChartSeries> = [];
 
   @Input('p-container-size') set containerSize(value: PoChartContainerSize) {
     this._containerSize = value;
 
+    this.getDomainValues(this.series, this._options);
     this.seriePathPointsDefinition(this._containerSize, this.categories, this.series, this.minMaxSeriesValues);
   }
 
@@ -45,13 +48,26 @@ export class PoChartLineComponent {
   @Input('p-series') set series(value: Array<PoLineChartSeries>) {
     this._series = value;
 
-    this.minMaxSeriesValues = this.mathsService.calculateMinAndMaxValues(this._series);
     this.colors = this.colorService.getSeriesColor(this._series, PoChartType.Line);
+    this.getDomainValues(this.series, this._options);
     this.seriePathPointsDefinition(this.containerSize, this.categories, this._series, this.minMaxSeriesValues);
   }
 
   get series() {
     return this._series;
+  }
+
+  @Input('p-options') set options(value: PoChartAxisOptions) {
+    if (value instanceof Object && !(value instanceof Array)) {
+      this._options = value;
+
+      this.getDomainValues(this.series, this._options);
+      this.seriePathPointsDefinition(this.containerSize, this.categories, this._series, this.minMaxSeriesValues);
+    }
+  }
+
+  get options() {
+    return this._options;
   }
 
   @ViewChild('chartLine') chartLine: ElementRef;
@@ -67,7 +83,16 @@ export class PoChartLineComponent {
     return index;
   }
 
-  seriePathPointsDefinition(
+  private getDomainValues(series: Array<PoLineChartSeries>, options: PoChartAxisOptions = {}): void {
+    const seriesMinMaxValues: PoChartMinMaxValues = this.mathsService.calculateMinAndMaxValues(series);
+
+    const minValue = options?.minRange < seriesMinMaxValues.minValue ? options.minRange : seriesMinMaxValues.minValue;
+    const maxValue = options?.maxRange > seriesMinMaxValues.maxValue ? options.maxRange : seriesMinMaxValues.maxValue;
+
+    this.minMaxSeriesValues = { minValue, maxValue };
+  }
+
+  private seriePathPointsDefinition(
     containerSize: PoChartContainerSize,
     categories: Array<string>,
     series: Array<PoLineChartSeries>,
@@ -100,6 +125,7 @@ export class PoChartLineComponent {
           containerSize.svgPlottingAreaHeight * yRratio +
           PoChartPlotAreaPaddingTop;
 
+        // label da série
         const serieLabel = `${serie['category']}: ${serieValue}`;
 
         // coordenadas do círculo
