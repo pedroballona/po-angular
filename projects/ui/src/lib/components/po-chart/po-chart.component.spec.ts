@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 import { of } from 'rxjs';
 
@@ -14,11 +14,13 @@ describe('PoChartComponent:', () => {
   let fixture;
   let nativeElement;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [PoChartModule]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [PoChartModule]
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PoChartComponent);

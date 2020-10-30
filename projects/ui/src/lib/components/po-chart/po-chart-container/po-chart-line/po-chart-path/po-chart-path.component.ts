@@ -5,8 +5,6 @@ import { Component, Input, AfterViewInit, ChangeDetectorRef } from '@angular/cor
   templateUrl: './po-chart-path.component.svg'
 })
 export class PoChartPathComponent implements AfterViewInit {
-  animate = true;
-
   @Input('p-color') color?: string;
 
   @Input('p-coordinates') coordinates: Array<{ coordinates: string }>;

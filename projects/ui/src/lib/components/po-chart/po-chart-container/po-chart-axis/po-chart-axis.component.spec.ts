@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChartAxisComponent } from './po-chart-axis.component';
+import { PoChartAxisComponent } from './po-chart-axis.component';
 
-describe('ChartAxisComponent', () => {
+describe('PoChartAxisComponent', () => {
   let component: PoChartAxisComponent;
   let fixture: ComponentFixture<PoChartAxisComponent>;
 

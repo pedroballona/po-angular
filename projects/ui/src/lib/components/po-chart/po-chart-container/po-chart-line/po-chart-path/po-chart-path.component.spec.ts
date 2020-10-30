@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PoChartSeriePathComponent } from './po-chart-serie-path.component';
+import { PoChartPathComponent } from './po-chart-path.component';
 
-describe('PoChartSeriePathComponent', () => {
-  let component: PoChartSeriePathComponent;
-  let fixture: ComponentFixture<PoChartSeriePathComponent>;
+describe('PoChartPathComponent', () => {
+  let component: PoChartPathComponent;
+  let fixture: ComponentFixture<PoChartPathComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PoChartSeriePathComponent]
+      declarations: [PoChartPathComponent]
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PoChartSeriePathComponent);
+    fixture = TestBed.createComponent(PoChartPathComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
