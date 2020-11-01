@@ -12,7 +12,6 @@ import { PoChartOptions } from '../interfaces/po-chart-options.interface';
 export class PoChartContainerComponent {
   viewBox: string;
 
-  private _series: Array<PoLineChartSeries>;
   private _containerSize: PoChartContainerSize;
 
   @Input('p-categories') categories: Array<string>;
@@ -30,17 +29,11 @@ export class PoChartContainerComponent {
 
   @Input('p-type') type: PoChartType;
 
-  @Input('p-series') set series(value: Array<PoLineChartSeries>) {
-    this._series = value;
-  }
-
-  get series() {
-    return this._series;
-  }
+  @Input('p-series') series: Array<PoLineChartSeries>;
 
   constructor() {}
 
-  setViewBox() {
+  private setViewBox() {
     const { svgWidth, svgHeight } = this.containerSize;
 
     // Tratamento necessário para que não corte o vetor nas extremidades
