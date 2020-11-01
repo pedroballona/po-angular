@@ -34,6 +34,7 @@ export type PoChartSeries = Array<PoDonutChartSeries | PoPieChartSeries | PoChar
 @Directive()
 export abstract class PoChartBaseComponent {
   private _options: PoChartOptions;
+  private _categories: Array<string>;
   private _height: number;
   private _series: Array<PoDonutChartSeries | PoPieChartSeries | PoLineChartSeries> | PoChartGaugeSerie;
   private _type: PoChartType = poChartTypeDefault;
@@ -104,8 +105,24 @@ export abstract class PoChartBaseComponent {
     return this._series;
   }
 
-  /** Define as categorias das séries. */
-  @Input('p-categories') categories?: Array<string>;
+  /**
+   * @optional
+   *
+   * @description
+   *
+   * Define os nomes das categorias que serão plotadas nos eixos Y do grid do gráfico.
+   *
+   * > Caso não seja especificado um valor para a categoria, será plotado um hífen na categoria referente a cada valor de série.
+   */
+  @Input('p-categories') set categories(value: Array<string>) {
+    if (Array.isArray(value)) {
+      this._categories = value;
+    }
+  }
+
+  get categories() {
+    return this._categories;
+  }
 
   /** Define o título do gráfico. */
   @Input('p-title') title?: string;

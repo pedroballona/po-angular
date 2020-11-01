@@ -104,6 +104,18 @@ describe('PoChartBaseComponent:', () => {
 
       expectPropertiesValues(component, 'options', invalidValues, undefined);
     });
+
+    it('p-categories: should update property with valid values', () => {
+      const validValue = [[], [1, 2, 3]];
+
+      expectPropertiesValues(component, 'categories', validValue, validValue);
+    });
+
+    it('p-categories: shouldn`t update property if receives invalid values', () => {
+      const invalidValues = [undefined, null, '', false, 0, {}, { key: 'value' }];
+
+      expectPropertiesValues(component, 'categories', invalidValues, undefined);
+    });
   });
 
   describe('Methods:', () => {
