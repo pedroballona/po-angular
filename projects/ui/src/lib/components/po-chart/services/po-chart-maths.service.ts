@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 
+import { PoChartAxisXLabelArea, PoChartPadding } from '../helpers/po-chart-default-values.constant';
+
+import { PoChartContainerSize } from '../interfaces/po-chart-container-size.interface';
+import { PoLineChartSeries } from '../interfaces/po-chart-line-series.interface';
 import { PoChartMinMaxValues } from '../interfaces/po-chart-min-max-values.interface';
 
 @Injectable({
@@ -108,5 +112,23 @@ export class PoChartMathsService {
     const displacement = serieValue - minValue;
 
     return displacement / range;
+  }
+
+  /**
+   * Retorna o tamanho da série que tiver mais itens.
+   */
+  seriesGreaterLength(series: Array<PoLineChartSeries>): number {
+    return series.reduce((result, serie) => (result > serie.data.length ? result : serie.data.length), 0);
+  }
+
+  /**
+   * Efetua o cálculo da área lateral entre o os labels X e a plotagem da primeira série. Válido para gráficos do tipo linha e área.
+   *
+   * > A largura máxima permitida é de 24px.
+   */
+  calculateSideSpacing(containerWidth: PoChartContainerSize['svgWidth'], seriesLength: number): number {
+    const halfCategoryWidth = (containerWidth - PoChartAxisXLabelArea) / seriesLength / 2;
+
+    return halfCategoryWidth <= PoChartPadding ? halfCategoryWidth : PoChartPadding;
   }
 }

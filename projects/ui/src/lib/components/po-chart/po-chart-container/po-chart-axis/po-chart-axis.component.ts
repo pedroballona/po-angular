@@ -24,6 +24,7 @@ export class PoChartAxisComponent {
 
   private digitsPrecision: number = 0;
   private minMaxAxisValues: PoChartMinMaxValues;
+  private seriesLength: number;
 
   private _axisOptions: PoChartAxisOptions;
   private _axisXGridLines: number = PoChartAxisXGridLines;
@@ -34,6 +35,7 @@ export class PoChartAxisComponent {
   @Input('p-series') set series(value: Array<any>) {
     this._series = value;
 
+    this.seriesLength = this.mathsService.seriesGreaterLength(this.series);
     this.minMaxAxisValues = this.mathsService.calculateMinAndMaxValues(this._series);
     this.checkAxisOptions(this.minMaxAxisValues, this.axisOptions);
   }
@@ -56,8 +58,8 @@ export class PoChartAxisComponent {
   @Input('p-categories') set categories(value: Array<string>) {
     this._categories = value;
 
-    this.setAxisYPoints(this.containerSize, this._categories);
-    this.setAxisYLabelPoints(this._categories, this.containerSize);
+    this.setAxisYPoints(this.containerSize, this.seriesLength);
+    this.setAxisYLabelPoints(this.containerSize, this.seriesLength, this._categories);
   }
 
   get categories() {
@@ -69,8 +71,8 @@ export class PoChartAxisComponent {
 
     this.setAxisXPoints(this.axisXGridLines, this._containerSize);
     this.setAxisXLabelPoints(this.axisXGridLines, this._containerSize, this.minMaxAxisValues, this.digitsPrecision);
-    this.setAxisYPoints(this._containerSize, this.categories);
-    this.setAxisYLabelPoints(this.categories, this._containerSize);
+    this.setAxisYPoints(this._containerSize, this.seriesLength);
+    this.setAxisYLabelPoints(this._containerSize, this.seriesLength, this._categories);
   }
 
   get containerSize() {
@@ -121,14 +123,14 @@ export class PoChartAxisComponent {
     });
   }
 
-  private setAxisYPoints(containerSize: PoChartContainerSize, categories: Array<string>) {
+  private setAxisYPoints(containerSize: PoChartContainerSize, seriesLength: number) {
     const startY = PoChartPlotAreaPaddingTop;
     const endY = containerSize.svgPlottingAreaHeight + PoChartPlotAreaPaddingTop;
 
     const outerYPoints = this.setAxisYOuterPoints(startY, endY, containerSize);
 
-    const innerYPoints = categories.map((_, index: number) => {
-      const xCoordinate = this.calculateAxisYCoordinateX(containerSize, categories, index);
+    const innerYPoints = [...Array(seriesLength)].map((_, index: number) => {
+      const xCoordinate = this.calculateAxisYCoordinateX(containerSize, index);
 
       const coordinates = `M${xCoordinate} ${startY} L${xCoordinate}, ${endY}`;
 
@@ -149,11 +151,15 @@ export class PoChartAxisComponent {
     return [firstLineCoordinates, lastLineCoordinates];
   }
 
-  private setAxisYLabelPoints(categories: Array<string>, containerSize: PoChartContainerSize) {
-    this.axisYLabelPoints = categories.map((category: string, index: number) => {
-      const label = category;
+  private setAxisYLabelPoints(
+    containerSize: PoChartContainerSize,
+    seriesLength: number,
+    categories: Array<string> = []
+  ) {
+    this.axisYLabelPoints = [...Array(seriesLength)].map((_, index: number) => {
+      const label = categories[index] ?? '-';
 
-      const xCoordinate = this.calculateAxisYCoordinateX(containerSize, categories, index);
+      const xCoordinate = this.calculateAxisYCoordinateX(containerSize, index);
       const yCoordinate = this.calculateAxisYLabelYPoint(containerSize);
 
       return { label, xCoordinate, yCoordinate };
@@ -184,13 +190,9 @@ export class PoChartAxisComponent {
     return containerSize.svgHeight - textPoChartPadding;
   }
 
-  private calculateAxisYCoordinateX(
-    containerSize: PoChartContainerSize,
-    categories: Array<string>,
-    index: number
-  ): number {
-    const xRatio = index / (categories.length - 1);
-    const svgAxisSideSpacing = this.calculateSideSpacing(containerSize.svgWidth, categories.length);
+  private calculateAxisYCoordinateX(containerSize: PoChartContainerSize, index: number): number {
+    const xRatio = index / (this.seriesLength - 1);
+    const svgAxisSideSpacing = this.mathsService.calculateSideSpacing(containerSize.svgWidth, this.seriesLength);
 
     return PoChartAxisXLabelArea + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
   }
@@ -207,11 +209,5 @@ export class PoChartAxisComponent {
 
   private isValidGridLinesLengthOption(axisXGridLines: number): boolean {
     return axisXGridLines >= 2 && axisXGridLines <= 10;
-  }
-
-  private calculateSideSpacing(containerWidth: PoChartContainerSize['svgWidth'], categoriesLength: number): number {
-    const halfCategoryWidth = (containerWidth - PoChartAxisXLabelArea) / categoriesLength / 2;
-
-    return halfCategoryWidth <= PoChartPadding ? halfCategoryWidth : PoChartPadding;
   }
 }
