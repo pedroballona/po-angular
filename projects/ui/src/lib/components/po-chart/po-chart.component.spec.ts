@@ -350,28 +350,26 @@ describe('PoChartComponent:', () => {
   });
 
   describe('Templates:', () => {
-    it('should create four subtitles with the correct colors if the length of the series is four', () => {
-      const colors = ['rgb(12, 108, 148)', 'rgb(11, 146, 180)', 'rgb(41, 182, 197)', 'rgb(148, 218, 226)'];
-
-      const getBackgroundColor = subtitle => subtitle.querySelector('.po-chart-legend-square').style.backgroundColor;
-
-      component['series'] = [
-        { category: 'A', value: 1 },
-        { category: 'B', value: 2 },
-        { category: 'C', value: 3 },
-        { category: 'D', value: 4 }
-      ];
+    it('should have po-chart-line-path tag if type is `Line`', () => {
+      component.series = [{ category: 'catA', data: [1, 2, 3] }];
+      component.type = PoChartType.Line;
 
       fixture.detectChanges();
 
-      const subtitles = nativeElement.querySelectorAll('.po-chart-legend-item');
+      const chartContainerContent = nativeElement.querySelector('.po-chart-line-path');
 
-      expect(subtitles.length).toBe(4);
+      expect(chartContainerContent).toBeTruthy();
+    });
 
-      expect(getBackgroundColor(subtitles[0])).toBe(colors[0]);
-      expect(getBackgroundColor(subtitles[1])).toBe(colors[1]);
-      expect(getBackgroundColor(subtitles[2])).toBe(colors[2]);
-      expect(getBackgroundColor(subtitles[3])).toBe(colors[3]);
+    it('shouldn`t have po-chart-line-path if type is different from `Line`', () => {
+      component.type = PoChartType.Pie;
+      component.series = [{ category: 'catA', value: 20 }];
+
+      fixture.detectChanges();
+
+      const chartContainerContent = nativeElement.querySelector('.po-chart-line-path');
+
+      expect(chartContainerContent).toBeNull();
     });
   });
 });
