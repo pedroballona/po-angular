@@ -1,5 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, Output, Renderer2 } from '@angular/core';
 
+import { PoChartPointsCoordinates } from '../../interfaces/po-chart-points-coordinates.interface';
+
 const RADIUS_DEFAULT_SIZE = 5;
 const RADIUS_HOVER_SIZE = 10;
 
@@ -12,10 +14,12 @@ export class PoChartSeriesPointComponent {
 
   @Input('p-color') color?: string;
 
-  @Input('p-coordinates') coordinates: Array<Array<{ xCoordinate: number; yCoordinate: number }>>;
+  @Input('p-coordinates') coordinates: Array<Array<PoChartPointsCoordinates>>;
 
   // Referência para o svgPathGroup ao qual pertence o ponto. Necessário para reordenação dos svgElements no DOM para tratamento onHover
   @Input('p-relative-to') relativeTo: string;
+
+  @Output('p-point-click') pointClick = new EventEmitter<any>();
 
   @Output('p-point-hover') pointHover = new EventEmitter<any>();
 
@@ -25,15 +29,31 @@ export class PoChartSeriesPointComponent {
     return index;
   }
 
-  onMouseEnter(event: any) {
-    this.renderer.setAttribute(event.target, 'r', RADIUS_HOVER_SIZE.toString());
-    this.renderer.setStyle(event.target, 'fill', this.color);
+  onClick(point: PoChartPointsCoordinates) {
+    const selectedItem = { category: point.category, value: point.value, axisCategory: point.axisCategory };
 
-    this.pointHover.emit(this.relativeTo);
+    this.pointClick.emit(selectedItem);
+  }
+
+  onMouseEnter(event: any, point: PoChartPointsCoordinates) {
+    this.setPointAttribute(event.target, true);
+
+    const selectedItem = { category: point.category, value: point.value, axisCategory: point.axisCategory };
+    this.pointHover.emit({ relativeTo: this.relativeTo, ...selectedItem });
   }
 
   onMouseLeave(event: any) {
-    this.renderer.setAttribute(event.target, 'r', RADIUS_DEFAULT_SIZE.toString());
-    this.renderer.removeStyle(event.target, 'fill');
+    this.setPointAttribute(event.target, false);
+  }
+
+  private setPointAttribute(target: SVGElement, isHover: boolean) {
+    if (isHover) {
+      this.renderer.setAttribute(target, 'r', RADIUS_HOVER_SIZE.toString());
+      this.renderer.setStyle(target, 'fill', this.color);
+      return;
+    }
+
+    this.renderer.setAttribute(target, 'r', RADIUS_DEFAULT_SIZE.toString());
+    this.renderer.removeStyle(target, 'fill');
   }
 }

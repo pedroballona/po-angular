@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
 
 import { PoChartAxisXLabelArea, PoChartPlotAreaPaddingTop } from '../../helpers/po-chart-default-values.constant';
 import { convertToInt } from '../../../../utils/util';
@@ -30,6 +30,8 @@ export class PoChartLineComponent {
   private _containerSize: PoChartContainerSize = {};
   private _options: PoChartAxisOptions;
   private _series: Array<PoLineChartSeries> = [];
+
+  @Input('p-categories') categories: Array<string>;
 
   @Input('p-container-size') set containerSize(value: PoChartContainerSize) {
     this._containerSize = value;
@@ -64,6 +66,10 @@ export class PoChartLineComponent {
     }
   }
 
+  @Output('p-point-click') pointClick = new EventEmitter<any>();
+
+  @Output('p-point-hover') pointHover = new EventEmitter<any>();
+
   get options() {
     return this._options;
   }
@@ -76,6 +82,17 @@ export class PoChartLineComponent {
     private renderer: Renderer2,
     private elementRef: ElementRef
   ) {}
+
+  onSeriePointClick(selectedItem: any) {
+    this.pointClick.emit(selectedItem);
+  }
+
+  onSeriePointHover(selectedItem: any) {
+    const { relativeTo, ...item } = selectedItem;
+
+    this.reorderSVGGroup(relativeTo);
+    this.pointHover.emit(item);
+  }
 
   trackBy(index) {
     return index;
@@ -108,9 +125,14 @@ export class PoChartLineComponent {
             const svgPathCommand = this.svgPathCommand();
             const xCoordinate = this.xCoordinate(index, containerSize);
             const yCoordinate = this.yCoordinate(minMaxSeriesValues, serieValue, containerSize);
-            const serieLabel = this.serieLabel(serie, serieValue);
+            const axisCategory = this.axisYCategory(index, this.categories);
+            const category = serie['category'];
+            const label = this.serieLabel(category, serieValue);
 
-            pointCoordinates = [...pointCoordinates, { serieLabel, serieValue, xCoordinate, yCoordinate }];
+            pointCoordinates = [
+              ...pointCoordinates,
+              { axisCategory, category, label, value: serieValue, xCoordinate, yCoordinate }
+            ];
             pathCoordinates += ` ${svgPathCommand}${xCoordinate} ${yCoordinate}`;
           }
         });
@@ -129,8 +151,8 @@ export class PoChartLineComponent {
     return command;
   }
 
-  private serieLabel(serie, serieValue) {
-    return `${serie['category']}: ${serieValue}`;
+  private serieLabel(category: string, serieValue: number) {
+    return `${category}: ${serieValue}`;
   }
 
   private xCoordinate(index: number, containerSize: PoChartContainerSize) {
@@ -138,6 +160,10 @@ export class PoChartLineComponent {
     const svgAxisSideSpacing = this.mathsService.calculateSideSpacing(containerSize.svgWidth, this.seriesLength);
 
     return PoChartAxisXLabelArea + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
+  }
+
+  private axisYCategory(index: number, categories: Array<string> = []) {
+    return categories[index] ?? undefined;
   }
 
   private yCoordinate(
@@ -153,7 +179,7 @@ export class PoChartLineComponent {
   }
 
   // É necessário reordenar os svgs on hover pois eventualmente os elemntos svg ficam por trás de outros. Não há z-index para svgElement.
-  reorderSVGGroup(pathGroup: string) {
+  private reorderSVGGroup(pathGroup: string) {
     const pathGroupElement = this.elementRef.nativeElement.querySelectorAll(`.${pathGroup}`);
 
     this.renderer.appendChild(this.chartLine.nativeElement, pathGroupElement[0]);

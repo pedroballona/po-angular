@@ -10,6 +10,8 @@
     [p-series]="series"
     [p-categories]="categories"
     [p-container-size]="svgContainerSize"
+    (p-serie-click)="onSeriesClick($event)"
+    (p-serie-hover)="onSeriesHover($event)"
   ></po-chart-container>
 
   <!-- Diretiva para injeção de gráficos do tipo circular. Serão repassados para dentro do po-chart-container futuramente.  -->

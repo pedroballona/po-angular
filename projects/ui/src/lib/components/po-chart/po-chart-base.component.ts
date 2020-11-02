@@ -183,7 +183,9 @@ export abstract class PoChartBaseComponent {
    *
    * Evento executado quando o usuário clicar sobre um elemento do gráfico.
    *
-   * > Será passado por parâmetro um objeto contendo a categoria e valor da série.
+   * O evento emitirá o seguinte parâmetro:
+   * - *gauge*, *donut* e *pie*: um objeto contendo a categoria e valor da série.
+   * - *line*: um objeto contendo a categoria, valor da série e categoria do eixo do gráfico.
    */
   @Output('p-series-click')
   seriesClick = new EventEmitter<PoDonutChartSeries | PoPieChartSeries | PoChartGaugeSerie>();
@@ -195,7 +197,9 @@ export abstract class PoChartBaseComponent {
    *
    * Evento executado quando o usuário passar o *mouse* sobre um elemento do gráfico.
    *
-   * > Será passado por parâmetro um objeto contendo a categoria e valor da série.
+   * O evento emitirá o seguinte parâmetro de acordo com o tipo de gráfico:
+   * - *gauge*, *donut* e *pie*: um objeto contendo a categoria e valor da série.
+   * - *line*: um objeto contendo a categoria, valor da série e categoria do eixo do gráfico.
    */
   @Output('p-series-hover')
   seriesHover = new EventEmitter<PoDonutChartSeries | PoPieChartSeries | PoChartGaugeSerie>();

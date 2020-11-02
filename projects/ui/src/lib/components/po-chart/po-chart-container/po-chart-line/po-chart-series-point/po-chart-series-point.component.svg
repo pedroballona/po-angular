@@ -1,5 +1,5 @@
 <svg:circle *ngFor="let item of coordinates; trackBy: trackBy" 
-  [p-tooltip]="item.serieLabel"
+  [p-tooltip]="item.label"
   p-tooltip-position="top"
   [p-append-in-body]='true'
   class="po-chart-line-point"
@@ -7,7 +7,8 @@
   [attr.cy]="item.yCoordinate"
   [attr.r]="radius"
   [attr.stroke]="color"
-  (mouseenter) ="onMouseEnter($event)"
-  (mouseleave) ="onMouseLeave($event)"
+  (click)="onClick(item)"
+  (mouseenter)="onMouseEnter($event, item)"
+  (mouseleave)="onMouseLeave($event)"
   >
 </svg:circle>

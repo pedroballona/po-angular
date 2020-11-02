@@ -17,7 +17,8 @@
       [p-relative-to]="'po-chart-line-path-group-' + i" 
       [p-coordinates]="seriesPointsCoordinates[i]"
       [attr.key]="'po-chart-line-path-points-group-' + i"
-      (p-point-hover)="reorderSVGGroup($event)"
+      (p-point-click)="onSeriePointClick($event)"
+      (p-point-hover)="onSeriePointHover($event)"
       ></svg:g>
   </svg:g>
 

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { PoChartType } from '../enums/po-chart-type.enum';
 import { PoLineChartSeries } from '../interfaces/po-chart-line-series.interface';
@@ -21,6 +21,10 @@ export class PoChartContainerComponent {
     this.viewBox = this.setViewBox();
   }
 
+  @Output('p-serie-click') serieClick = new EventEmitter<any>();
+
+  @Output('p-serie-hover') serieHover = new EventEmitter<any>();
+
   get containerSize() {
     return this._containerSize;
   }
@@ -32,6 +36,14 @@ export class PoChartContainerComponent {
   @Input('p-series') series: Array<PoLineChartSeries>;
 
   constructor() {}
+
+  onSerieClick(event: any) {
+    this.serieClick.emit(event);
+  }
+
+  onSerieHover(event: any) {
+    this.serieHover.emit(event);
+  }
 
   private setViewBox() {
     const { svgWidth, svgHeight } = this.containerSize;

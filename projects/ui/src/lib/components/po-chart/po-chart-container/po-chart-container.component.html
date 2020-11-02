@@ -1,5 +1,4 @@
 <svg:svg
-  #elementu
   class="po-chart-svg-element"
   preserveAspectRatio="xMidYMin meet"
   [attr.viewBox]="viewBox"
@@ -16,5 +15,13 @@
   ></svg:g>
 
   <!-- chart line -->
-  <svg:g po-chart-line [p-series]="series" [p-options]="options?.axis" [p-container-size]="containerSize"></svg:g>
+  <svg:g
+    po-chart-line
+    [p-categories]="categories"
+    [p-series]="series"
+    [p-options]="options?.axis"
+    [p-container-size]="containerSize"
+    (p-point-hover)="onSerieHover($event)"
+    (p-point-click)="onSerieClick($event)"
+  ></svg:g>
 </svg:svg>
