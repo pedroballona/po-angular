@@ -4,10 +4,8 @@ import { NgModule } from '@angular/core';
 import { PoTooltipModule } from '../../directives/po-tooltip/po-tooltip.module';
 
 import { PoChartAxisComponent } from './po-chart-container/po-chart-axis/po-chart-axis.component';
-import { PoChartAxisXComponent } from './po-chart-container/po-chart-axis/po-chart-axis-x/po-chart-axis-x.component';
-import { PoChartAxisYComponent } from './po-chart-container/po-chart-axis/po-chart-axis-y/po-chart-axis-y.component';
-import { PoChartAxisXLabelComponent } from './po-chart-container/po-chart-axis/po-chart-axis-x-label/po-chart-axis-x-label.component';
-import { PoChartAxisYLabelComponent } from './po-chart-container/po-chart-axis/po-chart-axis-y-label/po-chart-axis-y-label.component';
+import { PoChartAxisPathComponent } from './po-chart-container/po-chart-axis/po-chart-axis-path/po-chart-axis-path.component';
+import { PoChartAxisLabelComponent } from './po-chart-container/po-chart-axis/po-chart-axis-label/po-chart-axis-label.component';
 import { PoChartComponent } from './po-chart.component';
 import { PoChartContainerComponent } from './po-chart-container/po-chart-container.component';
 import { PoChartDonutComponent } from './po-chart-types/po-chart-donut/po-chart-donut.component';
@@ -28,10 +26,8 @@ import { PoChartSeriesPointComponent } from './po-chart-container/po-chart-line/
   imports: [CommonModule, PoTooltipModule],
   declarations: [
     PoChartAxisComponent,
-    PoChartAxisXComponent,
-    PoChartAxisYComponent,
-    PoChartAxisXLabelComponent,
-    PoChartAxisYLabelComponent,
+    PoChartAxisPathComponent,
+    PoChartAxisLabelComponent,
     PoChartComponent,
     PoChartContainerComponent,
     PoChartDonutComponent,

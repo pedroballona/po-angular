@@ -1,11 +1,3 @@
-<!-- AXIS X -->
-<svg:g po-chart-axis-x [p-axis-x-points]="axisXPoints"></svg:g>
+<svg:g po-chart-axis-path [p-axis-x-coordinates]="axisXCoordinates" [p-axis-y-coordinates]="axisYCoordinates"></svg:g>
 
-<!-- AXIS X LABELS-->
-<svg:g po-chart-axis-x-label [p-axis-x-label-points]="axisXLabelPoints"></svg:g>
-
-<!-- AXIS Y -->
-<svg:g po-chart-axis-y [p-axis-y-points]="axisYPoints"></svg:g>
- 
-  <!-- AXIS Y LABELS-->
-<svg:g po-chart-axis-y-label [p-axis-y-label-points]="axisYLabelPoints"></svg:g>
+<svg:g po-chart-axis-label [p-axis-x-label-coordinates]="axisXLabelCoordinates" [p-axis-y-label-coordinates]="axisYLabelCoordinates"></svg:g>

@@ -6,22 +6,13 @@ import { convertToInt } from '../../../../utils/util';
 import { PoChartColorService } from '../../services/po-chart-color.service';
 import { PoChartMathsService } from '../../services/po-chart-maths.service';
 
+import { PoChartType } from '../../enums/po-chart-type.enum';
 import { PoChartAxisOptions } from '../../interfaces/po-chart-axis-options.interface';
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
 import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
-import { PoChartType } from '../../enums/po-chart-type.enum';
+import { PoChartPathCoordinates } from '../interfaces/po-chart-path-coordinates.interface';
+import { PoChartPointsCoordinates } from '../interfaces/po-chart-points-coordinates.interface';
 import { PoLineChartSeries } from '../../interfaces/po-chart-line-series.interface';
-
-interface pathCoordinates {
-  coordinates: string;
-}
-
-interface pointCoordinates {
-  serieLabel: string;
-  serieValue: number;
-  xCoordinate: number;
-  yCoordinate: number;
-}
 
 @Component({
   selector: '[po-chart-line]',
@@ -29,8 +20,8 @@ interface pointCoordinates {
 })
 export class PoChartLineComponent {
   colors: Array<string>;
-  seriesPathsCoordinates: Array<pathCoordinates>;
-  seriesPointsCoordinates: Array<Array<pointCoordinates>> = [];
+  seriesPathsCoordinates: Array<PoChartPathCoordinates>;
+  seriesPointsCoordinates: Array<Array<PoChartPointsCoordinates>> = [];
 
   private minMaxSeriesValues: PoChartMinMaxValues;
   private seriesLength: number;
@@ -109,7 +100,7 @@ export class PoChartLineComponent {
     this.seriesPathsCoordinates = series.map((serie: PoLineChartSeries) => {
       if (Array.isArray(serie.data)) {
         let pathCoordinates: string = '';
-        let pointCoordinates: Array<pointCoordinates> = [];
+        let pointCoordinates: Array<PoChartPointsCoordinates> = [];
         this.firstValidItemFromSerieArray = true;
 
         serie.data.forEach((serieValue, index) => {

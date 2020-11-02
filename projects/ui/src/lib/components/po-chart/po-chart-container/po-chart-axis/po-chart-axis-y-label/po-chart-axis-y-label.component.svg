@@ -1,7 +1,0 @@
-<svg:text *ngFor="let item of axisYLabelPoints; trackBy: trackBy"
-  class="po-chart-axis-y-label" 
-  [attr.x]="item.xCoordinate"
-  [attr.y]="item.yCoordinate">
-  {{ item.label }}
-</svg:text> 
-
