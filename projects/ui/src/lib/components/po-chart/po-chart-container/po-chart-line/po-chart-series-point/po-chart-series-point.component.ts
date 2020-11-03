@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, Output, Renderer2 } from '@angular/core';
 
-import { PoChartPointsCoordinates } from '../../interfaces/po-chart-points-coordinates.interface';
+import { PoChartPointsCoordinates } from '../../../interfaces/po-chart-points-coordinates.interface';
 
 const RADIUS_DEFAULT_SIZE = 5;
 const RADIUS_HOVER_SIZE = 10;
@@ -14,7 +14,7 @@ export class PoChartSeriesPointComponent {
 
   @Input('p-color') color?: string;
 
-  @Input('p-coordinates') coordinates: Array<Array<PoChartPointsCoordinates>>;
+  @Input('p-coordinates') coordinates: Array<PoChartPointsCoordinates>;
 
   // Referência para o svgPathGroup ao qual pertence o ponto. Necessário para reordenação dos svgElements no DOM para tratamento onHover
   @Input('p-relative-to') relativeTo: string;

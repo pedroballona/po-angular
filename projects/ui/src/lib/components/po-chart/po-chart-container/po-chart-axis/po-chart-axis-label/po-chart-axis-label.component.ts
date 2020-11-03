@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { PoChartAxisLabelCoordinates } from '../../interfaces/po-chart-axis-label-coordinates.interface';
+import { PoChartAxisLabelCoordinates } from '../../../interfaces/po-chart-axis-label-coordinates.interface';
 
 @Component({
   selector: '[po-chart-axis-label]',

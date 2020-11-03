@@ -11,8 +11,8 @@ import { PoChartMathsService } from '../../services/po-chart-maths.service';
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
 import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
 import { PoChartAxisOptions } from '../../interfaces/po-chart-axis-options.interface';
-import { PoChartPathCoordinates } from '../interfaces/po-chart-path-coordinates.interface';
-import { PoChartAxisLabelCoordinates } from '../interfaces/po-chart-axis-label-coordinates.interface';
+import { PoChartPathCoordinates } from '../../interfaces/po-chart-path-coordinates.interface';
+import { PoChartAxisLabelCoordinates } from '../../interfaces/po-chart-axis-label-coordinates.interface';
 
 @Component({
   selector: '[po-chart-axis]',

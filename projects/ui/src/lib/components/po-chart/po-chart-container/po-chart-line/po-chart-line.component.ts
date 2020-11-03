@@ -10,8 +10,8 @@ import { PoChartType } from '../../enums/po-chart-type.enum';
 import { PoChartAxisOptions } from '../../interfaces/po-chart-axis-options.interface';
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
 import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
-import { PoChartPathCoordinates } from '../interfaces/po-chart-path-coordinates.interface';
-import { PoChartPointsCoordinates } from '../interfaces/po-chart-points-coordinates.interface';
+import { PoChartPathCoordinates } from '../../interfaces/po-chart-path-coordinates.interface';
+import { PoChartPointsCoordinates } from '../../interfaces/po-chart-points-coordinates.interface';
 import { PoLineChartSeries } from '../../interfaces/po-chart-line-series.interface';
 
 @Component({
@@ -36,7 +36,7 @@ export class PoChartLineComponent {
   @Input('p-container-size') set containerSize(value: PoChartContainerSize) {
     this._containerSize = value;
 
-    this.getDomainValues(this.series, this._options);
+    this.getDomainValues(this.series, this.options);
     this.seriePathPointsDefinition(this._containerSize, this.series, this.minMaxSeriesValues);
   }
 
@@ -49,7 +49,7 @@ export class PoChartLineComponent {
 
     this.seriesLength = this.mathsService.seriesGreaterLength(this.series);
     this.colors = this.colorService.getSeriesColor(this._series, PoChartType.Line);
-    this.getDomainValues(this.series, this._options);
+    this.getDomainValues(this._series, this.options);
     this.seriePathPointsDefinition(this.containerSize, this._series, this.minMaxSeriesValues);
   }
 
@@ -101,8 +101,8 @@ export class PoChartLineComponent {
   private getDomainValues(series: Array<PoLineChartSeries>, options: PoChartAxisOptions = {}): void {
     const seriesMinMaxValues: PoChartMinMaxValues = this.mathsService.calculateMinAndMaxValues(series);
 
-    const minValue = options?.minRange < seriesMinMaxValues.minValue ? options.minRange : seriesMinMaxValues.minValue;
-    const maxValue = options?.maxRange > seriesMinMaxValues.maxValue ? options.maxRange : seriesMinMaxValues.maxValue;
+    const minValue = options.minRange < seriesMinMaxValues.minValue ? options.minRange : seriesMinMaxValues.minValue;
+    const maxValue = options.maxRange > seriesMinMaxValues.maxValue ? options.maxRange : seriesMinMaxValues.maxValue;
 
     this.minMaxSeriesValues = { minValue, maxValue };
   }
@@ -144,8 +144,8 @@ export class PoChartLineComponent {
   }
 
   private svgPathCommand() {
-    // firstValidItemFromSerieArray: tratamento para permitir ao usuário definir o primeiro valor como null para que seja ignorado;
     const command = this.firstValidItemFromSerieArray ? 'M' : 'L';
+    // firstValidItemFromSerieArray: tratamento para permitir ao usuário definir o primeiro valor como null para que seja ignorado;
     this.firstValidItemFromSerieArray = false;
 
     return command;
@@ -172,10 +172,10 @@ export class PoChartLineComponent {
     containerSize: PoChartContainerSize
   ) {
     const yRratio = this.mathsService.getSeriePercentage(minMaxSeriesValues, serieValue);
+    const yCoordinate =
+      containerSize.svgPlottingAreaHeight - containerSize.svgPlottingAreaHeight * yRratio + PoChartPlotAreaPaddingTop;
 
-    return (
-      containerSize.svgPlottingAreaHeight - containerSize.svgPlottingAreaHeight * yRratio + PoChartPlotAreaPaddingTop
-    );
+    return Math.floor(yCoordinate);
   }
 
   // É necessário reordenar os svgs on hover pois eventualmente os elemntos svg ficam por trás de outros. Não há z-index para svgElement.
