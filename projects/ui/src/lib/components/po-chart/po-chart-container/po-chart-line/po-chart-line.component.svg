@@ -7,7 +7,7 @@
     <svg:g po-chart-path
       [attr.key]="'po-chart-line-path-' + i"
       [p-color]="colors[i]" 
-      [p-coordinates]="item.coordinates"
+      [p-coordinates]="item?.coordinates"
       >
       </svg:g>
 

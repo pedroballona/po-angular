@@ -73,14 +73,14 @@ describe('PoChartLineComponent', () => {
 
     it('getDomainValues: should apply value to `minMaxSeriesValues` with the min and max series values', () => {
       component.options = undefined;
-      component['getDomainValues'](component.series, component.options);
+      component['getDomainValues'](component.options);
 
-      expect(component['minMaxSeriesValues']).toEqual({ minValue: 0, maxValue: 30 });
+      expect(component['minMaxSeriesValues']).toEqual({ minValue: 1, maxValue: 30 });
     });
 
     it('getDomainValues: should apply value to `minMaxSeriesValues` with the min and max values of `options`', () => {
       component.options = { minRange: -10, maxRange: 50 };
-      component['getDomainValues'](component.series, component.options);
+      component['getDomainValues'](component.options);
 
       expect(component['minMaxSeriesValues']).toEqual({ minValue: -10, maxValue: 50 });
     });
@@ -243,7 +243,7 @@ describe('PoChartLineComponent', () => {
 
       component.containerSize = containerSize;
 
-      expect(spyGetDomainValues).toHaveBeenCalledWith(component.series, component.options);
+      expect(spyGetDomainValues).toHaveBeenCalledWith(component.options);
       expect(spySeriePathPointsDefinition).toHaveBeenCalledWith(
         component.containerSize,
         component.series,
@@ -251,7 +251,7 @@ describe('PoChartLineComponent', () => {
       );
     });
 
-    it('p-series: should call `getDomainValues`, `seriePathPointsDefinition`, `seriesGreaterLength` and `getSeriesColor`', () => {
+    it('p-series: should call `calculateMinAndMaxValues`, `getDomainValues`, `seriePathPointsDefinition`, `seriesGreaterLength` and `getSeriesColor`', () => {
       const type = PoChartType.Line;
       const spySeriesGreaterLength = spyOn(component['mathsService'], <any>'seriesGreaterLength');
       const spyGetSeriesColor = spyOn(component['colorService'], 'getSeriesColor');
@@ -262,7 +262,7 @@ describe('PoChartLineComponent', () => {
 
       expect(spySeriesGreaterLength).toHaveBeenCalledWith(component.series);
       expect(spyGetSeriesColor).toHaveBeenCalledWith(component.series, type);
-      expect(spyGetDomainValues).toHaveBeenCalledWith(component.series, component.options);
+      expect(spyGetDomainValues).toHaveBeenCalledWith(component.options);
       expect(spySeriePathPointsDefinition).toHaveBeenCalledWith(
         component.containerSize,
         component.series,
@@ -288,7 +288,7 @@ describe('PoChartLineComponent', () => {
 
       component.options = { axisXGridLines: 5, maxRange: 100, minRange: 0 };
 
-      expect(spyGetDomainValues).toHaveBeenCalledWith(component.series, component.options);
+      expect(spyGetDomainValues).toHaveBeenCalledWith(component.options);
       expect(spySeriePathPointsDefinition).toHaveBeenCalledWith(
         component.containerSize,
         component.series,

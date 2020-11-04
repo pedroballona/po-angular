@@ -18,10 +18,8 @@ export class PoChartMathsService {
    * @param series Lista de séries.
    */
   calculateMinAndMaxValues(series: Array<any>): PoChartMinMaxValues {
-    const maxValue = this.getDomain(series, 'max');
-    let minValue = this.getDomain(series, 'min');
-
-    minValue = this.verifyMinValue(minValue);
+    const minValue = this.getDomain(series, 'min') ?? 0;
+    const maxValue = this.getDomain(series, 'max') ?? 0;
 
     return {
       minValue,
@@ -107,12 +105,12 @@ export class PoChartMathsService {
     return Math[type].apply(
       Math,
       series.map(serie => {
-        return Math[type].apply(
-          Math,
-          serie.data.map((data: number) => {
-            return data;
-          })
-        );
+        if (Array.isArray(serie.data)) {
+          return Math[type].apply(
+            Math,
+            serie.data.map((data: number) => data)
+          );
+        }
       })
     );
   }
@@ -120,14 +118,5 @@ export class PoChartMathsService {
   // Retorna a fração do número passado referente à quantidade de linhas no eixo X (axisXGridLines)
   private getFractionFromInt(value: number) {
     return (1 / value) * (100 / 1);
-  }
-
-  /**
-   * Tratamento para valores negativos.
-   *
-   * > Se não houver nenhum valor negativo, então o valor mínimo para exibição no label Y será zero.
-   */
-  private verifyMinValue(value: number) {
-    return value > 0 ? 0 : value;
   }
 }

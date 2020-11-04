@@ -164,6 +164,14 @@ describe('PoChartComponent:', () => {
       expect(component['dynamicComponentSetting']).toHaveBeenCalled();
     });
 
+    it('rebuildComponentRef: should call `getSvgContainerSize`', () => {
+      const spyGetSvgContainerSize = spyOn(component, <any>'getSvgContainerSize');
+
+      component['rebuildComponentRef']();
+
+      expect(spyGetSvgContainerSize).toHaveBeenCalled();
+    });
+
     it('setComponentRefProperties: should apply PoChartDynamicTypeComponent property values', () => {
       const instance: any = {
         chartHeader: { nativeElement: { offsetHeight: 200 } },

@@ -130,6 +130,7 @@ export class PoChartComponent extends PoChartBaseComponent implements AfterViewI
 
       this.dynamicComponentSetting();
     }
+    this.getSvgContainerSize();
   }
 
   private chartLegendHeight(chartLegend: ElementRef) {

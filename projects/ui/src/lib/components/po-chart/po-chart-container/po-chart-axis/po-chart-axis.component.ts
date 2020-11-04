@@ -10,9 +10,9 @@ import {
 import { PoChartMathsService } from '../../services/po-chart-maths.service';
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
 import { PoChartMinMaxValues } from '../../interfaces/po-chart-min-max-values.interface';
-import { PoChartAxisOptions } from '../../interfaces/po-chart-axis-options.interface';
 import { PoChartPathCoordinates } from '../../interfaces/po-chart-path-coordinates.interface';
 import { PoChartAxisLabelCoordinates } from '../../interfaces/po-chart-axis-label-coordinates.interface';
+import { PoChartAxisOptions } from '../../interfaces/po-chart-axis-options.interface';
 
 @Component({
   selector: '[po-chart-axis]',
@@ -39,7 +39,7 @@ export class PoChartAxisComponent {
 
     this.seriesLength = this.mathsService.seriesGreaterLength(this.series);
     this.minMaxAxisValues = this.mathsService.calculateMinAndMaxValues(this._series);
-    this.checkAxisOptions(this.minMaxAxisValues, this.axisOptions);
+    this.checkAxisOptions(this.axisOptions);
   }
 
   get series() {
@@ -92,17 +92,10 @@ export class PoChartAxisComponent {
   }
 
   @Input('p-options') set axisOptions(value: PoChartAxisOptions) {
-    if (value instanceof Object && !(value instanceof Array)) {
-      this._axisOptions = value;
+    this._axisOptions = value;
 
-      this.checkAxisOptions(this.minMaxAxisValues, this._axisOptions);
-      this.setAxisXLabelCoordinates(
-        this.axisXGridLines,
-        this.containerSize,
-        this.minMaxAxisValues,
-        this.digitsPrecision
-      );
-    }
+    this.checkAxisOptions(this._axisOptions);
+    this.setAxisXLabelCoordinates(this.axisXGridLines, this.containerSize, this.minMaxAxisValues, this.digitsPrecision);
   }
 
   get axisOptions() {
@@ -214,14 +207,24 @@ export class PoChartAxisComponent {
     return PoChartAxisXLabelArea + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
   }
 
-  private checkAxisOptions(minMaxAxisValues: PoChartMinMaxValues, axisOptions: PoChartAxisOptions = {}): void {
-    const { minRange, maxRange, axisXGridLines } = axisOptions;
+  private checkAxisOptions(options: PoChartAxisOptions = {}): void {
+    this.minMaxAxisValues = this.mathsService.calculateMinAndMaxValues(this._series);
 
-    minMaxAxisValues.minValue = minRange < minMaxAxisValues.minValue ? minRange : minMaxAxisValues.minValue;
-    minMaxAxisValues.maxValue = maxRange > minMaxAxisValues.maxValue ? maxRange : minMaxAxisValues.maxValue;
+    const minValue =
+      options.minRange < this.minMaxAxisValues.minValue ? options.minRange : this.minMaxAxisValues.minValue;
+    const maxValue =
+      options.maxRange > this.minMaxAxisValues.maxValue ? options.maxRange : this.minMaxAxisValues.maxValue;
+    const minMaxUpdatedValues = { minValue, maxValue };
+
+    this.minMaxAxisValues = {
+      ...this.minMaxAxisValues,
+      ...minMaxUpdatedValues
+    };
 
     this.axisXGridLines =
-      axisXGridLines && this.isValidGridLinesLengthOption(axisXGridLines) ? axisXGridLines : PoChartAxisXGridLines;
+      options.axisXGridLines && this.isValidGridLinesLengthOption(options.axisXGridLines)
+        ? options.axisXGridLines
+        : PoChartAxisXGridLines;
   }
 
   private isValidGridLinesLengthOption(axisXGridLines: number): boolean {

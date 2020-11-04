@@ -4,15 +4,18 @@ import { PoChartType } from '../enums/po-chart-type.enum';
 import { PoLineChartSeries } from '../interfaces/po-chart-line-series.interface';
 import { PoChartContainerSize } from '../interfaces/po-chart-container-size.interface';
 import { PoChartOptions } from '../interfaces/po-chart-options.interface';
+import { PoChartAxisOptions } from '../interfaces/po-chart-axis-options.interface';
 
 @Component({
   selector: 'po-chart-container',
   templateUrl: './po-chart-container.component.html'
 })
 export class PoChartContainerComponent {
+  axisOptions: PoChartAxisOptions;
   viewBox: string;
 
   private _containerSize: PoChartContainerSize;
+  private _options: PoChartOptions;
 
   @Input('p-categories') categories: Array<string>;
 
@@ -29,7 +32,17 @@ export class PoChartContainerComponent {
     return this._containerSize;
   }
 
-  @Input('p-options') options?: PoChartOptions;
+  @Input('p-options') set options(value: PoChartOptions) {
+    if (value instanceof Object && !(value instanceof Array)) {
+      this._options = value;
+
+      this.verifyAxisOptions(this._options);
+    }
+  }
+
+  get options() {
+    return this._options;
+  }
 
   @Input('p-type') type: PoChartType;
 
@@ -52,5 +65,14 @@ export class PoChartContainerComponent {
     const offsetXY = 1;
 
     return `${offsetXY} -${offsetXY} ${svgWidth} ${svgHeight}`;
+  }
+
+  private verifyAxisOptions(options: PoChartOptions): void {
+    if (this._options.hasOwnProperty('axis')) {
+      this.axisOptions = {
+        ...this.axisOptions,
+        ...this._options.axis
+      };
+    }
   }
 }

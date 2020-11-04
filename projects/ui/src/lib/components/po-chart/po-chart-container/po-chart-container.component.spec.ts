@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
+import { expectPropertiesValues } from './../../../util-test/util-expect.spec';
+
 import { PoChartModule } from '../po-chart.module';
 
 import { PoChartContainerComponent } from './po-chart-container.component';
@@ -67,6 +69,30 @@ describe('PoChartContainerComponent', () => {
 
       expect(spySetViewBox).toHaveBeenCalled();
       expect(component.viewBox).toEqual(expectedResult);
+    });
+
+    it('p-options: should update property with valid values', () => {
+      const validValue = [{}, { axis: { minRange: 0 } }];
+
+      expectPropertiesValues(component, 'options', validValue, validValue);
+    });
+
+    it('p-options: shouldn`t update property if receives invalid values', () => {
+      const invalidValues = [undefined, null, '', false, 0, ['1'], [{ key: 'value' }]];
+
+      expectPropertiesValues(component, 'options', invalidValues, undefined);
+    });
+
+    it('p-options: should apply value to `axisOptions` if options has `axis` property', () => {
+      component.options = { axis: { minRange: 10 } };
+
+      expect(component.axisOptions).toEqual({ minRange: 10 });
+    });
+
+    it('p-options: shouldn`t apply value to `axisOptions` if options doesn`t have `axis` property', () => {
+      component.options = {};
+
+      expect(component.axisOptions).toBeUndefined();
     });
   });
 });

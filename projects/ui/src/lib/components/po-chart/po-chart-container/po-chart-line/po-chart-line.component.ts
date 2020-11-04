@@ -36,7 +36,7 @@ export class PoChartLineComponent {
   @Input('p-container-size') set containerSize(value: PoChartContainerSize) {
     this._containerSize = value;
 
-    this.getDomainValues(this.series, this.options);
+    this.getDomainValues(this.options);
     this.seriePathPointsDefinition(this._containerSize, this.series, this.minMaxSeriesValues);
   }
 
@@ -49,7 +49,7 @@ export class PoChartLineComponent {
 
     this.seriesLength = this.mathsService.seriesGreaterLength(this.series);
     this.colors = this.colorService.getSeriesColor(this._series, PoChartType.Line);
-    this.getDomainValues(this._series, this.options);
+    this.getDomainValues(this.options);
     this.seriePathPointsDefinition(this.containerSize, this._series, this.minMaxSeriesValues);
   }
 
@@ -61,7 +61,7 @@ export class PoChartLineComponent {
     if (value instanceof Object && !(value instanceof Array)) {
       this._options = value;
 
-      this.getDomainValues(this.series, this._options);
+      this.getDomainValues(this.options);
       this.seriePathPointsDefinition(this.containerSize, this._series, this.minMaxSeriesValues);
     }
   }
@@ -98,13 +98,19 @@ export class PoChartLineComponent {
     return index;
   }
 
-  private getDomainValues(series: Array<PoLineChartSeries>, options: PoChartAxisOptions = {}): void {
-    const seriesMinMaxValues: PoChartMinMaxValues = this.mathsService.calculateMinAndMaxValues(series);
+  private getDomainValues(options: PoChartAxisOptions = {}): void {
+    this.minMaxSeriesValues = this.mathsService.calculateMinAndMaxValues(this._series);
 
-    const minValue = options.minRange < seriesMinMaxValues.minValue ? options.minRange : seriesMinMaxValues.minValue;
-    const maxValue = options.maxRange > seriesMinMaxValues.maxValue ? options.maxRange : seriesMinMaxValues.maxValue;
+    const minValue =
+      options.minRange < this.minMaxSeriesValues.minValue ? options.minRange : this.minMaxSeriesValues.minValue;
+    const maxValue =
+      options.maxRange > this.minMaxSeriesValues.maxValue ? options.maxRange : this.minMaxSeriesValues.maxValue;
+    const minMaxUpdatedValues = { minValue, maxValue };
 
-    this.minMaxSeriesValues = { minValue, maxValue };
+    this.minMaxSeriesValues = {
+      ...this.minMaxSeriesValues,
+      ...minMaxUpdatedValues
+    };
   }
 
   private seriePathPointsDefinition(
