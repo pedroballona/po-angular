@@ -26,7 +26,7 @@ export class PoChartAxisComponent {
 
   private digitsPrecision: number = 0;
   private minMaxAxisValues: PoChartMinMaxValues;
-  private seriesLength: number;
+  private seriesLength: number = 0;
 
   private _axisOptions: PoChartAxisOptions;
   private _axisXGridLines: number = PoChartAxisXGridLines;
@@ -34,12 +34,18 @@ export class PoChartAxisComponent {
   private _containerSize: PoChartContainerSize = {};
   private _series: Array<any> = [];
 
-  @Input('p-series') set series(value: Array<any>) {
-    this._series = value;
+  @Input('p-series') set series(seriesList: Array<any>) {
+    const seriesDataArrayFilter = seriesList.filter(serie => {
+      return Array.isArray(serie.data);
+    });
 
-    this.seriesLength = this.mathsService.seriesGreaterLength(this.series);
-    this.minMaxAxisValues = this.mathsService.calculateMinAndMaxValues(this._series);
-    this.checkAxisOptions(this.axisOptions);
+    if (seriesDataArrayFilter.length) {
+      this._series = seriesDataArrayFilter;
+
+      this.seriesLength = this.mathsService.seriesGreaterLength(this.series);
+      this.minMaxAxisValues = this.mathsService.calculateMinAndMaxValues(this._series);
+      this.checkAxisOptions(this.axisOptions);
+    }
   }
 
   get series() {
@@ -76,6 +82,7 @@ export class PoChartAxisComponent {
   @Input('p-container-size') set containerSize(value: PoChartContainerSize) {
     this._containerSize = value;
 
+    this.checkAxisOptions(this.axisOptions);
     this.setaxisXCoordinates(this.axisXGridLines, this._containerSize);
     this.setAxisXLabelCoordinates(
       this.axisXGridLines,

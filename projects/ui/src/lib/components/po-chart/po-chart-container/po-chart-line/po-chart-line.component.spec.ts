@@ -270,6 +270,23 @@ describe('PoChartLineComponent', () => {
       );
     });
 
+    it('p-series: shouldn`t bind any function if `serie.data` isn`t an array', () => {
+      const spySeriesGreaterLength = spyOn(component['mathsService'], <any>'seriesGreaterLength');
+      const spyGetSeriesColor = spyOn(component['colorService'], 'getSeriesColor');
+      const spyGetDomainValues = spyOn(component, <any>'getDomainValues');
+      const spySeriePathPointsDefinition = spyOn(component, <any>'seriePathPointsDefinition');
+
+      component.series = <any>[
+        { category: 'category', data: 1 },
+        { category: 'category B', data: 2 }
+      ];
+
+      expect(spySeriesGreaterLength).not.toHaveBeenCalled();
+      expect(spyGetSeriesColor).not.toHaveBeenCalled();
+      expect(spyGetDomainValues).not.toHaveBeenCalled();
+      expect(spySeriePathPointsDefinition).not.toHaveBeenCalled();
+    });
+
     it('p-options: should update property if valid values', () => {
       const validValues = [{}, { axisXGridLines: 5 }];
 

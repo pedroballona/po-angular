@@ -44,13 +44,19 @@ export class PoChartLineComponent {
     return this._containerSize;
   }
 
-  @Input('p-series') set series(value: Array<PoLineChartSeries>) {
-    this._series = value;
+  @Input('p-series') set series(seriesList: Array<PoLineChartSeries>) {
+    const seriesDataArrayFilter = seriesList.filter(serie => {
+      return Array.isArray(serie.data);
+    });
 
-    this.seriesLength = this.mathsService.seriesGreaterLength(this.series);
-    this.colors = this.colorService.getSeriesColor(this._series, PoChartType.Line);
-    this.getDomainValues(this.options);
-    this.seriePathPointsDefinition(this.containerSize, this._series, this.minMaxSeriesValues);
+    if (seriesDataArrayFilter.length) {
+      this._series = seriesDataArrayFilter;
+
+      this.seriesLength = this.mathsService.seriesGreaterLength(this.series);
+      this.colors = this.colorService.getSeriesColor(this._series, PoChartType.Line);
+      this.getDomainValues(this.options);
+      this.seriePathPointsDefinition(this.containerSize, seriesDataArrayFilter, this.minMaxSeriesValues);
+    }
   }
 
   get series() {
