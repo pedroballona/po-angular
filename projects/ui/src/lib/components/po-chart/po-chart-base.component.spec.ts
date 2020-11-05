@@ -8,6 +8,7 @@ import { PoChartType } from './enums/po-chart-type.enum';
 @Directive()
 class PoCharComponent extends PoChartBaseComponent {
   rebuildComponentRef() {}
+  getSvgContainerSize() {}
 }
 
 describe('PoChartBaseComponent:', () => {
@@ -22,14 +23,16 @@ describe('PoChartBaseComponent:', () => {
   });
 
   describe('Properties:', () => {
-    it('p-height: should update property with 200 if values is lower than 200', () => {
+    it('p-height: should update property with 200 if values is lower than 200 and call `rebuildComponentRef` plus `getSvgContainerSize`', () => {
       const validValues = [105, 1, 7, 0, -5];
 
       spyOn(component, 'rebuildComponentRef');
+      spyOn(component, 'getSvgContainerSize');
 
       expectPropertiesValues(component, 'height', validValues, 200);
 
       expect(component.rebuildComponentRef).toHaveBeenCalled();
+      expect(component.getSvgContainerSize).toHaveBeenCalled();
     });
 
     it('p-height: should update property with valid values', () => {
@@ -42,7 +45,7 @@ describe('PoChartBaseComponent:', () => {
       expect(component.rebuildComponentRef).toHaveBeenCalled();
     });
 
-    it('p-height: should call `setDefaultHeight` if height isn`t defined`', () => {
+    it('p-height: should call `setDefaultHeight` and if height isn`t defined`', () => {
       spyOn(component, <any>'setDefaultHeight').and.callThrough();
 
       const expectedHeight = component.height;

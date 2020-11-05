@@ -4,10 +4,10 @@
   </div>
 
   <po-chart-container
-    *ngIf="isChartLineType"
+    *ngIf="!isDynamicComponentType"
     [p-options]="options"
     [p-type]="type"
-    [p-series]="series"
+    [p-series]="chartSeries"
     [p-categories]="categories"
     [p-container-size]="svgContainerSize"
     (p-serie-click)="onSeriesClick($event)"

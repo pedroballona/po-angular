@@ -9,10 +9,10 @@ describe('PoChartSeriesPointComponent', () => {
   let nativeElement;
 
   const coordinates = {
-    axisCategory: 'janeiro',
-    category: 'Vancouver',
-    label: 'Vancouver: 200',
-    value: 200,
+    category: 'janeiro',
+    tooltipLabel: 'Vancouver: 200',
+    label: 'Vancouver',
+    data: 200,
     xCoordinate: 200,
     yCoordinate: 200
   };
@@ -37,15 +37,15 @@ describe('PoChartSeriesPointComponent', () => {
   });
 
   describe('Methods:', () => {
-    it('onClick: should emit `pointClick` with an object with `category`, `value` and `axisCategory`', () => {
+    it('onClick: should emit `pointClick` with an object with `label`, `data` and `category`', () => {
       const spyPointClick = spyOn(component.pointClick, 'emit');
 
       component.onClick(coordinates);
 
       const expectedParam = {
-        category: coordinates.category,
-        value: coordinates.value,
-        axisCategory: coordinates.axisCategory
+        label: coordinates.label,
+        data: coordinates.data,
+        category: coordinates.category
       };
 
       expect(spyPointClick).toHaveBeenCalledWith(expectedParam);
@@ -61,9 +61,9 @@ describe('PoChartSeriesPointComponent', () => {
 
       const expectedParam = {
         relativeTo: undefined,
-        category: coordinates.category,
-        value: coordinates.value,
-        axisCategory: coordinates.axisCategory
+        label: coordinates.label,
+        data: coordinates.data,
+        category: coordinates.category
       };
 
       expect(spySetPointAttribute).toHaveBeenCalledWith(event.target, true);

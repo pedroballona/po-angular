@@ -7,7 +7,7 @@
  */
 export interface PoLineChartSeries {
   /** Define o valor da categoria do objeto. */
-  category: string;
+  label: string;
 
   /**
    * @optional

@@ -11,7 +11,7 @@ describe('PoChartContainerComponent', () => {
   let component: PoChartContainerComponent;
   let fixture: ComponentFixture<PoChartContainerComponent>;
 
-  const series = [{ category: 'category', data: [1, 2, 3] }];
+  const series = [{ label: 'category', data: [1, 2, 3] }];
   const containerSize: PoChartContainerSize = {
     svgWidth: 200,
     svgHeight: 200,

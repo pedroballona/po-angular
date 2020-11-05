@@ -7,13 +7,13 @@ import { PoChartType } from '../../enums/po-chart-type.enum';
 import { PoChartContainerSize } from '../../interfaces/po-chart-container-size.interface';
 import { PoChartModule } from '../../po-chart.module';
 
-describe('PoChartLineComponent', () => {
+fdescribe('PoChartLineComponent', () => {
   let component: PoChartLineComponent;
   let fixture: ComponentFixture<PoChartLineComponent>;
 
   const series = [
-    { category: 'category', data: [1, 2, 3] },
-    { category: 'category B', data: [10, 20, 30] }
+    { label: 'category', data: [1, 2, 3] },
+    { label: 'category B', data: [10, 20, 30] }
   ];
   const containerSize: PoChartContainerSize = {
     svgWidth: 200,
@@ -43,7 +43,7 @@ describe('PoChartLineComponent', () => {
 
   describe('Methods:', () => {
     it('onSeriePointClick: should emit `pointClick`', () => {
-      const selectedItem = { category: 'cat', value: 200 };
+      const selectedItem = { label: 'cat', data: 200 };
 
       const spyPointClick = spyOn(component.pointClick, 'emit');
 
@@ -53,14 +53,14 @@ describe('PoChartLineComponent', () => {
     });
 
     it('onSeriePointHover: should emit `pointHover` and call `reorderSVGGroup`', () => {
-      const selectedItem = { relativeTo: 'po-chart-path-1', category: 'Vancouver', value: 200 };
+      const selectedItem = { relativeTo: 'po-chart-path-1', label: 'Vancouver', data: 200 };
 
       const spyReorderSVGGroup = spyOn(component, <any>'reorderSVGGroup');
       const spyPointHover = spyOn(component.pointHover, 'emit');
 
       component.onSeriePointHover(selectedItem);
 
-      expect(spyPointHover).toHaveBeenCalledWith({ category: 'Vancouver', value: 200 });
+      expect(spyPointHover).toHaveBeenCalledWith({ label: 'Vancouver', data: 200 });
       expect(spyReorderSVGGroup).toHaveBeenCalledWith('po-chart-path-1');
     });
 
@@ -86,13 +86,13 @@ describe('PoChartLineComponent', () => {
     });
 
     describe('seriePathPointsDefinition: ', () => {
-      it('should call `svgPathCommand`, `xCoordinate`, `yCoordinate`, `axisYCategory` and `serieLabel`', () => {
+      it('should call `svgPathCommand`, `xCoordinate`, `yCoordinate`, `category` and `serieLabel`', () => {
         const minMaxSeriesValues = { minValue: 0, maxValue: 30 };
 
         const spySvgPathCommand = spyOn(component, <any>'svgPathCommand');
         const spyXCoordinate = spyOn(component, <any>'xCoordinate');
         const spyYCoordinate = spyOn(component, <any>'yCoordinate');
-        const spyAxisYCategory = spyOn(component, <any>'axisYCategory');
+        const spyCategory = spyOn(component, <any>'category');
         const spySerieLabel = spyOn(component, <any>'serieLabel');
 
         component['seriePathPointsDefinition'](component.containerSize, component.series, minMaxSeriesValues);
@@ -100,13 +100,13 @@ describe('PoChartLineComponent', () => {
         expect(spySvgPathCommand).toHaveBeenCalled();
         expect(spyXCoordinate).toHaveBeenCalled();
         expect(spyYCoordinate).toHaveBeenCalled();
-        expect(spyAxisYCategory).toHaveBeenCalled();
+        expect(spyCategory).toHaveBeenCalled();
         expect(spySerieLabel).toHaveBeenCalled();
       });
 
       it('should apply apply value to `seriesPathsCoordinates`', () => {
         const minMaxSeriesValues = { minValue: 5, maxValue: 10 };
-        component.series = [{ category: 'Vancouver', data: [5, 10] }];
+        component.series = [{ label: 'Vancouver', data: [5, 10] }];
 
         component['seriePathPointsDefinition'](component.containerSize, component.series, minMaxSeriesValues);
 
@@ -118,25 +118,25 @@ describe('PoChartLineComponent', () => {
 
       it('should apply apply value to `seriesPointsCoordinates`', () => {
         const minMaxSeriesValues = { minValue: 5, maxValue: 10 };
-        component.series = [{ category: 'Vancouver', data: [5, 10] }];
+        component.series = [{ label: 'Vancouver', data: [5, 10] }];
 
         component['seriePathPointsDefinition'](component.containerSize, component.series, minMaxSeriesValues);
 
         const expectedResult = [
           [
             {
-              axisCategory: undefined,
-              category: 'Vancouver',
-              label: 'Vancouver: 5',
-              value: 5,
+              category: undefined,
+              label: 'Vancouver',
+              tooltipLabel: 'Vancouver: 5',
+              data: 5,
               xCoordinate: 72,
               yCoordinate: 28
             },
             {
-              axisCategory: undefined,
-              category: 'Vancouver',
-              label: 'Vancouver: 10',
-              value: 10,
+              category: undefined,
+              label: 'Vancouver',
+              tooltipLabel: 'Vancouver: 10',
+              data: 10,
               xCoordinate: 92,
               yCoordinate: 8
             }
@@ -150,7 +150,7 @@ describe('PoChartLineComponent', () => {
 
       it('should apply apply value to `seriesPointsCoordinates` passing `categories` value of each one', () => {
         const minMaxSeriesValues = { minValue: 5, maxValue: 10 };
-        component.series = [{ category: 'Vancouver', data: [5, 10] }];
+        component.series = [{ label: 'Vancouver', data: [5, 10] }];
         component.categories = ['janeiro', 'fevereiro'];
 
         component['seriePathPointsDefinition'](component.containerSize, component.series, minMaxSeriesValues);
@@ -158,18 +158,18 @@ describe('PoChartLineComponent', () => {
         const expectedResult = [
           [
             {
-              axisCategory: 'janeiro',
-              category: 'Vancouver',
-              label: 'Vancouver: 5',
-              value: 5,
+              category: 'janeiro',
+              label: 'Vancouver',
+              tooltipLabel: 'Vancouver: 5',
+              data: 5,
               xCoordinate: 72,
               yCoordinate: 28
             },
             {
-              axisCategory: 'fevereiro',
-              category: 'Vancouver',
-              label: 'Vancouver: 10',
-              value: 10,
+              category: 'fevereiro',
+              label: 'Vancouver',
+              tooltipLabel: 'Vancouver: 10',
+              data: 10,
               xCoordinate: 92,
               yCoordinate: 8
             }
@@ -183,24 +183,24 @@ describe('PoChartLineComponent', () => {
 
       it('should ignore to coordinates the serie.data which it`s value is null', () => {
         const minMaxSeriesValues = { minValue: 5, maxValue: 10 };
-        const series = [{ category: 'Vancouver', data: [10, null, 12] }];
+        const series = [{ label: 'Vancouver', data: [10, null, 12] }];
         component.categories = ['janeiro', 'fevereiro', 'março'];
 
         const expectedPointsResult = [
           [
             {
-              axisCategory: 'janeiro',
-              category: 'Vancouver',
-              label: 'Vancouver: 10',
-              value: 10,
+              category: 'janeiro',
+              label: 'Vancouver',
+              tooltipLabel: 'Vancouver: 10',
+              data: 10,
               xCoordinate: 72,
               yCoordinate: 8
             },
             {
-              axisCategory: 'março',
-              category: 'Vancouver',
-              label: 'Vancouver: 12',
-              value: 12,
+              category: 'março',
+              label: 'Vancouver',
+              tooltipLabel: 'Vancouver: 12',
+              data: 12,
               xCoordinate: 92,
               yCoordinate: 0
             }
@@ -215,7 +215,7 @@ describe('PoChartLineComponent', () => {
 
       it('shouldn`t apply values to `seriesPointsCoordinates` neither to `seriesPathsCoordinates` if series.data isn`t an array', () => {
         const minMaxSeriesValues = { minValue: 5, maxValue: 10 };
-        const series = [{ category: 'Vancouver', data: 12 }];
+        const series = [{ label: 'Vancouver', data: 12 }];
 
         component['seriePathPointsDefinition'](component.containerSize, <any>series, minMaxSeriesValues);
 
@@ -277,8 +277,8 @@ describe('PoChartLineComponent', () => {
       const spySeriePathPointsDefinition = spyOn(component, <any>'seriePathPointsDefinition');
 
       component.series = <any>[
-        { category: 'category', data: 1 },
-        { category: 'category B', data: 2 }
+        { label: 'category', data: 1 },
+        { label: 'category B', data: 2 }
       ];
 
       expect(spySeriesGreaterLength).not.toHaveBeenCalled();

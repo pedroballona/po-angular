@@ -29,7 +29,7 @@ export class SamplePoChartLabsComponent implements OnInit {
   value: number;
   type: PoChartType;
   lineValues: number;
-  categoryMultipleValues: string = '';
+  multipleValuesLabel: string = '';
   categories: string;
   allCategories: Array<string> = [];
   inputDataSeries: string;
@@ -75,7 +75,7 @@ export class SamplePoChartLabsComponent implements OnInit {
     } else if (this.isMultipleValues) {
       const dataSeries = this.convertToArray(this.inputDataSeries);
 
-      this.multipleValues = [...this.multipleValues, { category: this.categoryMultipleValues, data: dataSeries }];
+      this.multipleValues = [...this.multipleValues, { label: this.multipleValuesLabel, data: dataSeries }];
     } else {
       this.multipleSeries = [
         ...this.multipleSeries,
@@ -111,7 +111,7 @@ export class SamplePoChartLabsComponent implements OnInit {
     this.description = undefined;
     this.allCategories = [];
     this.inputDataSeries = '';
-    this.categoryMultipleValues = undefined;
+    this.multipleValuesLabel = undefined;
     this.lineValues = undefined;
     this.multipleValues = [];
     this.options = {

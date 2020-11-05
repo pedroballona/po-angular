@@ -30,7 +30,7 @@ export class PoChartSeriesPointComponent {
   }
 
   onClick(point: PoChartPointsCoordinates) {
-    const selectedItem = { category: point.category, value: point.value, axisCategory: point.axisCategory };
+    const selectedItem = { label: point.label, data: point.data, category: point.category };
 
     this.pointClick.emit(selectedItem);
   }
@@ -38,7 +38,7 @@ export class PoChartSeriesPointComponent {
   onMouseEnter(event: any, point: PoChartPointsCoordinates) {
     this.setPointAttribute(event.target, true);
 
-    const selectedItem = { category: point.category, value: point.value, axisCategory: point.axisCategory };
+    const selectedItem = { label: point.label, data: point.data, category: point.category };
     this.pointHover.emit({ relativeTo: this.relativeTo, ...selectedItem });
   }
 

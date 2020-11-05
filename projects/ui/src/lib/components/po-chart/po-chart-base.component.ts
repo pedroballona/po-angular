@@ -40,7 +40,7 @@ export abstract class PoChartBaseComponent {
   private _type: PoChartType = poChartTypeDefault;
 
   // manipulação das séries tratadas internamente para preservar 'p-series';
-  protected chartSeries: PoChartSeries;
+  chartSeries: PoChartSeries;
 
   public readonly poChartType = PoChartType;
 
@@ -71,6 +71,7 @@ export abstract class PoChartBaseComponent {
 
     this._height = height;
 
+    this.getSvgContainerSize();
     this.rebuildComponentRef();
   }
 
@@ -221,5 +222,6 @@ export abstract class PoChartBaseComponent {
   }
 
   // válido para gráficos do tipo circular e que será refatorado.
+  protected abstract getSvgContainerSize(): void;
   abstract rebuildComponentRef(): void;
 }

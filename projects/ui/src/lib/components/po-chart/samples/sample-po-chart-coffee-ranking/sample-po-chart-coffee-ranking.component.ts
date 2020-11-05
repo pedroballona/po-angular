@@ -21,7 +21,7 @@ export class SamplePoChartCoffeeRankingComponent {
   };
 
   brazilianCoffeeProductionChartType: PoChartType = PoChartType.Gauge;
-  ParticipationByCountryInWorldExportsType: PoChartType = PoChartType.Line;
+  participationByCountryInWorldExportsType: PoChartType = PoChartType.Line;
   coffeConsumingChartType: PoChartType = PoChartType.Donut;
 
   categories: Array<string> = ['2010', '2011', '2012', '2013', '2014', '2015'];
@@ -34,7 +34,7 @@ export class SamplePoChartCoffeeRankingComponent {
     { category: 'Austria', value: 5.5, tooltip: 'Austria (Europe)' }
   ];
 
-  ParticipationByCountryInWorldExports: Array<PoLineChartSeries> = [
+  participationByCountryInWorldExports: Array<PoLineChartSeries> = [
     { category: 'Brazil', data: [35, 32, 25, 29, 33, 33] },
     { category: 'Vietnam', data: [15, 17, 23, 19, 22, 18] },
     { category: 'Colombia', data: [8, 7, 6, 9, 10, 11] },

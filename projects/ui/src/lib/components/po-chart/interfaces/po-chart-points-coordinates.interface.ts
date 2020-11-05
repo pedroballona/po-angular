@@ -9,16 +9,16 @@
  */
 export interface PoChartPointsCoordinates {
   /** Categoria do eixo Y na qual o item da série está presente. */
-  axisCategory: string;
-
-  /** A série para a qual correspondem as coordenadas. */
   category: string;
 
-  /** O texto de exibição no tooltip. */
+  /** A série para a qual correspondem as coordenadas. */
   label: string;
 
+  /** O texto de exibição no tooltip. */
+  tooltipLabel: string;
+
   /** Valor da série. */
-  value: number;
+  data: number;
 
   /** Coordenada horizontal. */
   xCoordinate: number;

@@ -137,13 +137,13 @@ export class PoChartLineComponent {
             const svgPathCommand = this.svgPathCommand();
             const xCoordinate = this.xCoordinate(index, containerSize);
             const yCoordinate = this.yCoordinate(minMaxSeriesValues, serieValue, containerSize);
-            const axisCategory = this.axisYCategory(index, this.categories);
-            const category = serie['category'];
-            const label = this.serieLabel(category, serieValue);
+            const category = this.serieCategory(index, this.categories);
+            const label = serie['label'];
+            const tooltipLabel = this.serieLabel(serieValue, label);
 
             pointCoordinates = [
               ...pointCoordinates,
-              { axisCategory, category, label, value: serieValue, xCoordinate, yCoordinate }
+              { category, label, tooltipLabel, data: serieValue, xCoordinate, yCoordinate }
             ];
             pathCoordinates += ` ${svgPathCommand}${xCoordinate} ${yCoordinate}`;
           }
@@ -163,8 +163,10 @@ export class PoChartLineComponent {
     return command;
   }
 
-  private serieLabel(category: string, serieValue: number) {
-    return `${category}: ${serieValue}`;
+  private serieLabel(serieValue: number, label: string) {
+    const hasLabel = (label !== null && label !== undefined && label !== '') ?? undefined;
+
+    return hasLabel ? `${label}: ${serieValue}` : serieValue.toString();
   }
 
   private xCoordinate(index: number, containerSize: PoChartContainerSize) {
@@ -174,7 +176,7 @@ export class PoChartLineComponent {
     return PoChartAxisXLabelArea + svgAxisSideSpacing + containerSize.svgPlottingAreaWidth * xRatio;
   }
 
-  private axisYCategory(index: number, categories: Array<string> = []) {
+  private serieCategory(index: number, categories: Array<string> = []) {
     return categories[index] ?? undefined;
   }
 

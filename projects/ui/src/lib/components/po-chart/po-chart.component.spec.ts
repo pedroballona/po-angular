@@ -48,16 +48,16 @@ describe('PoChartComponent:', () => {
       expect(component.isChartGaugeType).toBeFalsy();
     });
 
-    it('isChartLineType: should return `true` if type is equal `PoChartType.Line`', () => {
+    it('isChartLineType: should return `false` if type is equal `PoChartType.Line`', () => {
       component.type = PoChartType.Line;
 
-      expect(component.isChartLineType).toBeTruthy();
+      expect(component.isDynamicComponentType).toBeFalsy();
     });
 
-    it('isChartLineType: should return `false` if type is diferent from `PoChartType.Line`', () => {
+    it('isChartLineType: should return `true` if type is diferent from `PoChartType.Line`', () => {
       component.type = PoChartType.Pie;
 
-      expect(component.isChartLineType).toBeFalsy();
+      expect(component.isDynamicComponentType).toBeTruthy();
     });
   });
 
@@ -68,14 +68,6 @@ describe('PoChartComponent:', () => {
       component.ngOnDestroy();
 
       expect(component['removeWindowResizeListener']).toHaveBeenCalled();
-    });
-
-    it('ngOnInit: should call `getSvgContainerSize`', () => {
-      spyOn(component, <any>'getSvgContainerSize');
-
-      component.ngOnInit();
-
-      expect(component['getSvgContainerSize']).toHaveBeenCalled();
     });
 
     describe('NgDoCheck: ', () => {
@@ -170,6 +162,16 @@ describe('PoChartComponent:', () => {
       component['rebuildComponentRef']();
 
       expect(spyGetSvgContainerSize).toHaveBeenCalled();
+    });
+
+    it('rebuildComponentRef: shouldn`t call `dynamicComponentSetting` if type is line', () => {
+      component.type = PoChartType.Line;
+
+      spyOn(component, <any>'dynamicComponentSetting');
+
+      component['rebuildComponentRef']();
+
+      expect(component['dynamicComponentSetting']).not.toHaveBeenCalled();
     });
 
     it('setComponentRefProperties: should apply PoChartDynamicTypeComponent property values', () => {
@@ -359,7 +361,7 @@ describe('PoChartComponent:', () => {
 
   describe('Templates:', () => {
     it('should have po-chart-line-path tag if type is `Line`', () => {
-      component.series = [{ category: 'catA', data: [1, 2, 3] }];
+      component.series = [{ label: 'catA', data: [1, 2, 3] }];
       component.type = PoChartType.Line;
 
       fixture.detectChanges();

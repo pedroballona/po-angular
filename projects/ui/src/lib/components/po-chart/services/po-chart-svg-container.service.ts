@@ -41,9 +41,11 @@ export class PoChartSvgContainerService {
     };
   }
 
-  // Largura do container
+  // Largura do container.
   private svgWidth(chartWrapperWidth: number) {
-    return chartWrapperWidth - PoChartPadding * 2;
+    const wrapperWidth = chartWrapperWidth - PoChartPadding * 2;
+
+    return wrapperWidth > 0 ? wrapperWidth : 0;
   }
 
   // O centro do container. Usado para gráficos do tipo circular.

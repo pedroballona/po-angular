@@ -1,5 +1,5 @@
 <svg:circle *ngFor="let item of coordinates; trackBy: trackBy" 
-  [p-tooltip]="item.label"
+  [p-tooltip]="item.tooltipLabel"
   p-tooltip-position="top"
   [p-append-in-body]='true'
   class="po-chart-line-point"

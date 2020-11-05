@@ -73,9 +73,9 @@ describe('PoChartMathsService', () => {
 
     it('seriesGreaterLength: should return the serie`s greater length value', () => {
       const series = [
-        { category: 'A', data: [-20, 20, 45] },
-        { category: 'B', data: [200, 170, 210, 40, 200] },
-        { category: 'B', data: [200, 210, 200] }
+        { label: 'A', data: [-20, 20, 45] },
+        { label: 'B', data: [200, 170, 210, 40, 200] },
+        { label: 'B', data: [200, 210, 200] }
       ];
 
       expect(service.seriesGreaterLength(series)).toBe(5);
